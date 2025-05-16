@@ -153,11 +153,16 @@ Buka http://localhost:5173 di browser Anda! 🎉
 
 ## 👨‍💻 Kontributor
 
-<div align="center">
+<div align="center" style="display: flex; justify-content: center; gap: 20px;">
   <a href="https://github.com/ferdi166">
     <img src="https://avatars.githubusercontent.com/ferdi166" width="100" style="border-radius:50%"/>
     <br />
     <sub><b>Ferdi</b></sub>
+  </a>
+  <a href="https://github.com/BrianAinu">
+    <img src="https://avatars.githubusercontent.com/BrianAinu" width="100" style="border-radius:50%"/>
+    <br />
+    <sub><b>Brian Ainu</b></sub>
   </a>
 </div>
 
