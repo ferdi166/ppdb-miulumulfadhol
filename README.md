@@ -6,10 +6,6 @@
 ![GitHub Pull Requests](https://img.shields.io/github/issues-pr/ferdi166/ppdb-miulumulfadhol)
 ![GitHub Issues](https://img.shields.io/github/issues/ferdi166/ppdb-miulumulfadhol)
 
-### 🏫 Sistem Penerimaan Peserta Didik Baru Modern untuk MI ULUMUL FADHOL
-
-[Lihat Demo](https://ppdb-miulumulfadhol.netlify.app) • [Laporkan Bug](https://github.com/ferdi166/ppdb-miulumulfadhol/issues) • [Ajukan Fitur](https://github.com/ferdi166/ppdb-miulumulfadhol/issues)
-
 </div>
 
 ---
