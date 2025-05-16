@@ -62,7 +62,7 @@ npm run dev
 
 # Terminal 2 - Backend
 cd backend
-npm run dev
+node server
 ```
 
 ## Struktur Project
