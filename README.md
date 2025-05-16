@@ -1,6 +1,6 @@
-# Sistem Penerimaan Peserta Didik Baru (PPDB) Madrasah Ibtidaiyah (MI)
+# Sistem Penerimaan Peserta Didik Baru (PPDB) MI ULMUL FADHOL
 
-Aplikasi web untuk mengelola proses penerimaan peserta didik baru di madrasah ibtidaiyah (MI). Dibangun menggunakan React.js untuk frontend dan Node.js untuk backend.
+Aplikasi web untuk mengelola proses penerimaan peserta didik baru di MI ULMUL FADHOL. Dibangun menggunakan React.js untuk frontend dan Node.js untuk backend.
 
 ## Fitur Utama
 
