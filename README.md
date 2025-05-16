@@ -88,7 +88,6 @@ cd ../backend && npm install
    dialect: 'mysql'
    ```
 3. Sesuaikan kredensial di `backend/config/db.config.js` jika berbeda
-```
 
 ### 🎯 3. Menjalankan Aplikasi
 
