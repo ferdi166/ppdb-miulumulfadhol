@@ -79,13 +79,15 @@ cd ../backend && npm install
 
 ```bash
 # Setup Database
-1. Buat database MySQL baru
-2. Import file SQL dari /backend/database/
-3. Sesuaikan .env dengan kredensial database
-
-# Konfigurasi Environment
-1. Copy .env.example ke .env
-2. Sesuaikan variabel sesuai kebutuhan
+1. Buat database MySQL baru dengan nama `ppdb-miulumulfadhol`
+2. Pastikan kredensial database sesuai:
+   ```js
+   username: 'root'
+   password: ''
+   host: 'localhost'
+   dialect: 'mysql'
+   ```
+3. Sesuaikan kredensial di `backend/config/db.config.js` jika berbeda
 ```
 
 ### 🎯 3. Menjalankan Aplikasi
