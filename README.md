@@ -166,7 +166,3 @@ Buka http://localhost:5173 di browser Anda! 🎉
     </td>
   </tr>
 </table>
-
-## 📑 Lisensi
-
-Dibuat dengan ❤️ oleh Tim IT MI ULUMUL FADHOL
