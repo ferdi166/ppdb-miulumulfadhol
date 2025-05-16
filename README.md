@@ -1,60 +1,95 @@
-# Sistem Penerimaan Peserta Didik Baru (PPDB) MI ULMUL FADHOL
+<div align="center">
 
-Aplikasi web untuk mengelola proses penerimaan peserta didik baru di MI ULMUL FADHOL. Dibangun menggunakan React.js untuk frontend dan Node.js untuk backend.
+# 📚 Sistem PPDB Online MI ULUMUL FADHOL
 
-## Fitur Utama
+![Status](https://img.shields.io/badge/status-active-success.svg)
+![GitHub Pull Requests](https://img.shields.io/github/issues-pr/ferdi166/ppdb-miulumulfadhol)
+![GitHub Issues](https://img.shields.io/github/issues/ferdi166/ppdb-miulumulfadhol)
 
-- Form pendaftaran siswa baru dengan validasi
-- Manajemen jadwal pendaftaran
-- Dashboard admin untuk:
-  - Kelola data pendaftar
-  - Atur kuota pendaftaran
-  - Kelola informasi sekolah
-  - Laporan dan statistik pendaftaran
-- Upload dan verifikasi dokumen
+### 🏫 Sistem Penerimaan Peserta Didik Baru Modern untuk MI ULUMUL FADHOL
+
+[Lihat Demo](https://ppdb-miulumulfadhol.netlify.app) • [Laporkan Bug](https://github.com/ferdi166/ppdb-miulumulfadhol/issues) • [Ajukan Fitur](https://github.com/ferdi166/ppdb-miulumulfadhol/issues)
+
+</div>
+
+---
+
+## 🌟 Fitur Unggulan
+
+🔐 **Pendaftaran Online**
+- Form pendaftaran yang mudah digunakan
+- Validasi data otomatis
+- Upload dokumen digital
 - Notifikasi status pendaftaran
 
-## Teknologi yang Digunakan
+👨‍💼 **Dashboard Admin**
+- Kelola data pendaftar secara efisien
+- Atur kuota pendaftaran
+- Monitor statistik real-time
+- Kelola informasi sekolah
 
-### Frontend
-- React.js dengan Vite
-- React Context untuk state management
-- Tailwind CSS untuk styling
-- Axios untuk HTTP requests
-- Moment.js untuk manajemen waktu
+📅 **Manajemen Jadwal**
+- Atur periode pendaftaran
+- Pengingat otomatis
+- Status pendaftaran real-time
 
-### Backend
-- Node.js dengan Express
-- MySQL database
-- Multer untuk upload file
-- JWT untuk autentikasi
+📊 **Laporan & Analitik**
+- Statistik pendaftaran
+- Export data ke Excel
+- Grafik interaktif
 
-## Instalasi
+## 🛠️ Tech Stack
 
-1. Clone repository
+**Frontend:**
 ```bash
+📱 React.js + Vite     # Framework UI modern
+🎨 Tailwind CSS       # Styling yang fleksibel
+📦 React Context      # State management
+🔄 Axios              # HTTP client
+⏰ Moment.js          # Manajemen waktu
+```
+
+**Backend:**
+```bash
+⚡ Node.js + Express   # Server yang cepat & ringan
+🗄️ MySQL Database     # Database yang handal
+📤 Multer            # Upload file mudah
+🔒 JWT               # Autentikasi aman
+```
+
+## 🚀 Panduan Penggunaan
+
+### 📥 1. Clone & Install
+
+```bash
+# Clone repository
 git clone https://github.com/ferdi166/ppdb-miulumulfadhol.git
+
+# Masuk ke direktori project
 cd ppdb-miulumulfadhol
+
+# Install dependencies frontend
+cd frontend && npm install
+
+# Install dependencies backend
+cd ../backend && npm install
 ```
 
-2. Install dependencies frontend
+### ⚙️ 2. Konfigurasi
+
 ```bash
-cd frontend
-npm install
+# Setup Database
+1. Buat database MySQL baru
+2. Import file SQL dari /backend/database/
+3. Sesuaikan .env dengan kredensial database
+
+# Konfigurasi Environment
+1. Copy .env.example ke .env
+2. Sesuaikan variabel sesuai kebutuhan
 ```
 
-3. Install dependencies backend
-```bash
-cd backend
-npm install
-```
+### 🎯 3. Menjalankan Aplikasi
 
-4. Setup database
-- Buat database MySQL
-- Import struktur database dari file SQL yang disediakan
-- Sesuaikan konfigurasi database di `backend/config/db.config.js`
-
-5. Jalankan aplikasi
 ```bash
 # Terminal 1 - Frontend
 cd frontend
@@ -65,35 +100,67 @@ cd backend
 node server
 ```
 
-## Struktur Project
+Buka http://localhost:5173 di browser Anda! 🎉
 
-```
-ppdb-sd-swasta/
-├── frontend/
+## 📂 Struktur Project
+
+```bash
+📁 ppdb-miulumulfadhol/
+├── 📓 frontend/                # Aplikasi React
 │   ├── src/
-│   │   ├── components/      # Reusable components
-│   │   ├── context/         # React Context
-│   │   ├── pages/          # Halaman aplikasi
-│   │   ├── services/       # API services
-│   │   └── utils/          # Helper functions
-│   └── ...
-├── backend/
-│   ├── config/            # Konfigurasi
-│   ├── controllers/       # Logic handlers
-│   ├── models/           # Database models
-│   ├── routes/           # API routes
-│   └── ...
-└── README.md
+│   │   ├── components/        # Komponen reusable
+│   │   ├── context/           # React Context
+│   │   ├── pages/             # Halaman aplikasi
+│   │   ├── services/          # API services
+│   │   └── utils/             # Helper functions
+│   └── public/                # Asset statis
+│
+├── 📒 backend/                 # Server Node.js
+│   ├── config/               # Konfigurasi
+│   ├── controllers/          # Logic handlers
+│   ├── models/              # Database models
+│   ├── routes/              # API routes
+│   └── database/            # SQL & migrations
+│
+└── 📙 docs/                    # Dokumentasi
 ```
 
-## Validasi Form
+## ✅ Validasi Form
 
-- NIK: 16 digit angka
-- Nomor Telepon: 10-13 digit, diawali dengan 08
-- Dokumen yang diunggah: PDF/JPG/PNG (max 2MB)
+```bash
+🔢 NIK
+   - 16 digit angka
+   - Format: XXXXXXXXXXXXXXXX
 
-## Manajemen Waktu
+📱 Nomor Telepon
+   - 10-13 digit
+   - Diawali dengan 08
+   - Format: 08XXXXXXXXXX
 
-- Menggunakan timezone Asia/Jakarta
-- Format waktu: YYYY-MM-DD HH:mm:ss
-- Validasi jadwal pendaftaran otomatis
+📄 Dokumen
+   - Format: PDF/JPG/PNG
+   - Ukuran max: 2MB
+   - Resolusi min: 300dpi
+```
+
+## ⏰ Manajemen Waktu
+
+```bash
+🌎 Timezone: Asia/Jakarta
+📅 Format: YYYY-MM-DD HH:mm:ss
+⏳ Validasi: Otomatis per menit
+```
+
+## 👨‍💻 Kontributor
+
+<div align="center">
+  <a href="https://github.com/ferdi166">
+    <img src="https://avatars.githubusercontent.com/ferdi166" width="100" style="border-radius:50%"/>
+    <br />
+    <sub><b>Ferdi</b></sub>
+  </a>
+</div>
+
+## 📑 Lisensi
+
+Dibuat dengan ❤️ oleh Tim IT MI ULUMUL FADHOL
