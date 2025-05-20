@@ -38,7 +38,7 @@ const Kontak = () => {
         </div>
 
         {/* Informasi kontak */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 relative bg-white rounded-xl shadow-lg p-6 md:p-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 relative p-6 md:p-8">
           {/* Kolom kiri - Informasi kontak */}
           <div className="space-y-6">
             {/* Alamat */}
@@ -92,7 +92,7 @@ const Kontak = () => {
               <div>
                 <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-1">WhatsApp:</h3>
                 <a href="https://api.whatsapp.com/send/?phone=6281280163958&text&type=phone_number&app_absent=0" className="text-sm md:text-base text-emerald-700 hover:text-emerald-800 font-medium">
-                  0812-8016-3958
+                  Bu Retno (0858-0427-6710)
                 </a>
               </div>
             </div>

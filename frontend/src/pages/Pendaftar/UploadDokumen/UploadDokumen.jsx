@@ -197,7 +197,7 @@ const UploadDokumen = () => {
 
         // Validasi tipe file
         if (!file.type.startsWith('image/')) {
-            toast.error('File harus berupa gambar');
+            toast.error('Format dokumen belum sesuai (JPG/PNG/JPEG)');
             return;
         }
 
@@ -300,6 +300,30 @@ const UploadDokumen = () => {
         e.preventDefault();
         if (!isAgreed) {
             toast.warning('Silakan centang persetujuan terlebih dahulu');
+            return;
+        }
+
+        // Validasi kelengkapan dokumen dan foto
+        let missingItems = [];
+
+        // Cek foto profil
+        if (!profileImage && !originalPhoto) {
+            missingItems.push('Foto Profil');
+        }
+
+        // Cek dokumen-dokumen lainnya
+        const missingDocuments = documents.filter(doc => {
+            // Cek apakah dokumen sudah ada sebelumnya (dari API) atau baru diupload
+            const hasExistingDoc = doc.file;
+            const hasNewDoc = documentFiles[doc.id];
+            return !hasExistingDoc && !hasNewDoc;
+        });
+
+        // Tambahkan dokumen yang belum lengkap ke array missingItems
+        missingItems = [...missingItems, ...missingDocuments.map(doc => doc.name)];
+
+        if (missingItems.length > 0) {
+            toast.warning(`Silakan lengkapi item berikut: ${missingItems.join(', ')}`);
             return;
         }
 
