@@ -197,14 +197,34 @@ export const getPendaftaranByUserId = async (req, res) => {
     }
 };
 
-// Fungsi untuk menampilkan total pendaftaran
+// Fungsi untuk menampilkan total pendaftaran keseluruhan dan berdasarkan jenis kelamin
 export const getTotalPendaftaran = async (req, res) => {
     try {
-        const response = await Pendaftaran.count();
+        // Hitung total semua pendaftar
+        const totalPendaftar = await Pendaftaran.count();
+        
+        // Hitung total pendaftar laki-laki
+        const totalLakiLaki = await Pendaftaran.count({
+            where: {
+                jenis_kelamin: 'L'
+            }
+        });
+        
+        // Hitung total pendaftar perempuan
+        const totalPerempuan = await Pendaftaran.count({
+            where: {
+                jenis_kelamin: 'P'
+            }
+        });
+
         res.status(200).json({
             success: true,
             message: "Total pendaftaran berhasil diambil",
-            data: response
+            data: {
+                total: totalPendaftar,
+                laki_laki: totalLakiLaki,
+                perempuan: totalPerempuan
+            }
         });
     } catch (error) {
         console.error('Error fetching total pendaftaran:', error);

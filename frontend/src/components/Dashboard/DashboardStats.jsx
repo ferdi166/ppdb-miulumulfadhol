@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaUsers, FaSchool, FaUserGraduate, FaCalendarAlt, FaCheckCircle, FaClock } from 'react-icons/fa';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, BarElement } from 'chart.js';
-import { Pie, Line, Bar } from 'react-chartjs-2';
+import { Pie, Bar } from 'react-chartjs-2';
 import moment from 'moment-timezone';
 import { formatRangeTanggal } from '../../utils/dateFormat';
 import { getAllJadwalPendaftaran } from '../../services/penjadwalan.service';
@@ -37,9 +37,17 @@ const StatisticCard = ({ icon: Icon, title, value, colorClass }) => (
  * @param {Object} props.stats - Data statistik
  * @param {number} props.stats.totalDiterima - Total siswa yang diterima
  * @param {number} props.stats.totalPendaftar - Total pendaftar
+ * @param {number} props.stats.totalLakiLaki - Total pendaftar laki-laki
+ * @param {number} props.stats.totalPerempuan - Total pendaftar perempuan
  * @param {number} props.stats.dayaTampung - Daya tampung sekolah
  */
-const DashboardStats = ({ stats = { totalDiterima: 0, totalPendaftar: 0, dayaTampung: 0 } }) => {
+const DashboardStats = ({ stats = { 
+    totalDiterima: 0, 
+    totalPendaftar: 0, 
+    totalLakiLaki: 0,
+    totalPerempuan: 0,
+    dayaTampung: 0 
+} }) => {
     const [jadwalKegiatan, setJadwalKegiatan] = useState([]);
     const [currentDate, setCurrentDate] = useState(moment());
     const [activeKegiatan, setActiveKegiatan] = useState([]);
@@ -168,28 +176,28 @@ const DashboardStats = ({ stats = { totalDiterima: 0, totalPendaftar: 0, dayaTam
                 {/* Bar Chart Status Pendaftar */}
                 <div className="bg-white rounded-lg border border-gray-200 p-6">
                     <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-xl font-bold text-gray-800">Status Pendaftar</h2>
+                        <h2 className="text-xl font-bold text-gray-800">Total Pendaftar</h2>
                         <div className="flex gap-4">
                             <div className="flex items-center">
-                                <div className="w-3 h-3 rounded-full bg-emerald-500 mr-2"></div>
-                                <span className="text-sm text-gray-600">Diterima</span>
+                                <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
+                                <span className="text-sm text-gray-600">Laki-laki</span>
                             </div>
                             <div className="flex items-center">
-                                <div className="w-3 h-3 rounded-full bg-amber-500 mr-2"></div>
-                                <span className="text-sm text-gray-600">Belum Diverifikasi</span>
+                                <div className="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
+                                <span className="text-sm text-gray-600">Perempuan</span>
                             </div>
                         </div>
                     </div>
                     <div className="h-64">
                         <Bar
                             data={{
-                                labels: ['Diterima', 'Belum Diverifikasi'],
+                                labels: ['Laki-laki', 'Perempuan'],
                                 datasets: [
                                     {
                                         label: 'Jumlah Pendaftar',
                                         data: [
-                                            stats.totalDiterima || 0,
-                                            stats.totalPendaftar - (stats.totalDiterima || 0)
+                                            stats.totalLakiLaki || 0,
+                                            stats.totalPerempuan || 0
                                         ],
                                         backgroundColor: ['#10B981', '#F59E0B'],
                                         borderRadius: 6,

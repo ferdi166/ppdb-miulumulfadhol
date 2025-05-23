@@ -35,6 +35,7 @@ const CetakBuktiPenerimaan = () => {
                     alamat: data.alamat,
                     noTelp: data.nomor_telepon || '-',
                     foto: fotoDokumen?.file || '-',
+                    status: data.status,
                 });
             } catch (err) {
                 setError('Gagal mengambil data pendaftaran');
@@ -157,6 +158,13 @@ const CetakBuktiPenerimaan = () => {
                                 <div className="flex-1 mt-1 sm:mt-0">
                                     <span className="mr-4 hidden sm:inline">:</span>
                                     <span className="border-b-2 border-gray-400 pb-0.5 inline-block w-full sm:w-[95%]">{dataSiswa.noTelp}</span>
+                                </div>
+                            </div>
+                            <div className="flex flex-col sm:flex-row sm:items-baseline">
+                                <div className="w-full sm:w-64 font-medium sm:font-normal">8. Status Pendaftaran</div>
+                                <div className="flex-1 mt-1 sm:mt-0">
+                                    <span className="mr-4 hidden sm:inline">:</span>
+                                    <span className="border-b-2 border-gray-400 pb-0.5 inline-block w-full sm:w-[95%]">{dataSiswa.status}</span>
                                 </div>
                             </div>
                         </div>

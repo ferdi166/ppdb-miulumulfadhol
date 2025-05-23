@@ -21,6 +21,8 @@ export const DashboardProvider = ({ children }) => {
     const [stats, setStats] = useState({
         totalDiterima: 0,
         totalPendaftar: 0,
+        totalLakiLaki: 0,
+        totalPerempuan: 0,
         dayaTampung: 0
     });
 
@@ -41,7 +43,9 @@ export const DashboardProvider = ({ children }) => {
 
             setStats({
                 totalDiterima: totalDiterimaData?.data || 0,
-                totalPendaftar: totalPendaftarData?.data || 0,
+                totalPendaftar: totalPendaftarData?.total || 0,
+                totalLakiLaki: totalPendaftarData?.laki_laki || 0,
+                totalPerempuan: totalPendaftarData?.perempuan || 0,
                 dayaTampung: Array.isArray(dayaTampungData) ? dayaTampungData[0]?.daya_tampung || 0 : 0
             });
         } catch (error) {

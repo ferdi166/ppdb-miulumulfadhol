@@ -102,15 +102,15 @@ export const FormProvider = ({ children, mode = 'create', pendaftaranId = null, 
   // Fungsi untuk validasi tahun lulus
   const validateTahunLulus = (tahun) => {
     if (!tahun) return ''
-    
+
     const tahunNum = parseInt(tahun)
     const tahunSekarang = new Date().getFullYear()
-    
+
     if (!/^\d{4}$/.test(tahun)) {
       return 'Tahun lulus harus 4 digit'
     }
-    if (tahunNum < 2020) {
-      return 'Tahun lulus minimal 2020'
+    if (tahunNum < (tahunSekarang - 5)) {
+      return 'Tahun lulus tidak boleh lebih dari 5 tahun yang lalu'
     }
     if (tahunNum > tahunSekarang) {
       return 'Tahun lulus tidak boleh lebih dari tahun sekarang'
@@ -121,7 +121,7 @@ export const FormProvider = ({ children, mode = 'create', pendaftaranId = null, 
   // Fungsi untuk menangani perubahan input
   const handleChange = (e) => {
     const { name, value } = e.target
-    
+
     // Validasi input
     if (name === 'nik') {
       const error = validateNIK(value)
@@ -152,7 +152,7 @@ export const FormProvider = ({ children, mode = 'create', pendaftaranId = null, 
   // Fungsi untuk menangani pengiriman formulir
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
+
     // Validasi sebelum submit
     const nikError = validateNIK(formData.nik)
     const namaSiswaError = validateNama(formData.namaSiswa, 'Nama siswa')
@@ -170,7 +170,7 @@ export const FormProvider = ({ children, mode = 'create', pendaftaranId = null, 
       telepon: teleponError,
       tahunLulus: tahunLulusError
     }
-    
+
     setErrors(newErrors)
 
     // Cek apakah ada error
@@ -201,7 +201,7 @@ export const FormProvider = ({ children, mode = 'create', pendaftaranId = null, 
       } else {
         response = await createPendaftaran(pendaftaranData);
       }
-      
+
       // Reset form jika mode create
       if (mode === 'create') {
         setFormData({
@@ -221,7 +221,7 @@ export const FormProvider = ({ children, mode = 'create', pendaftaranId = null, 
         // Trigger refresh dashboard
         window.dispatchEvent(new Event('refresh_dashboard'))
       }
-      
+
       setErrors({
         nik: '',
         namaSiswa: '',

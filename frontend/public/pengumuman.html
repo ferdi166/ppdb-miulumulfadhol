@@ -208,9 +208,10 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th style="width: 10%">No</th>
-                                    <th style="width: 45%">Nomor Registrasi</th>
-                                    <th style="width: 45%">Nama Siswa</th>
+                                    <th style="width: 5%">No</th>
+                                    <th style="width: 30%">Nomor Registrasi</th>
+                                    <th style="width: 35%">Nama Siswa</th>
+                                    <th style="width: 30%">Nama Asal Sekolah</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -219,6 +220,7 @@
                                         <td>${row.no}</td>
                                         <td>${row.registrasi}</td>
                                         <td>${row.nama}</td>
+                                        <td>${row.nama_asal_sekolah}</td>
                                     </tr>
                                 `).join('')}
                             </tbody>
@@ -257,7 +259,8 @@
                     .map((item, index) => ({
                         no: index + 1,
                         registrasi: item.no_pendaftaran,
-                        nama: item.nama_siswa
+                        nama: item.nama_siswa,
+                        nama_asal_sekolah: item.nama_asal_sekolah
                     }));
                     
                 // Buat halaman setelah data tersedia

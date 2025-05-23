@@ -12,6 +12,7 @@ export const getPendaftaranDiterima = async () => {
             jenis_kelamin: item.jenis_kelamin === 1 ? 'Laki-laki' : 'Perempuan',
             alamat: item.alamat,
             nomor_telepon: item.nomor_telepon,
+            nama_asal_sekolah: item.nama_asal_sekolah,
             foto: item.dok_foto,
             tempat_lahir: item.tempat_lahir,
             tanggal_lahir: moment(item.tanggal_lahir).format('DD/MM/YYYY'),

@@ -93,7 +93,7 @@ const Informasi = () => {
           </div> */}
 
           {/* Kuota Penerimaan */}
-          <div className="mb-8 bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors duration-200">
+          {/* <div className="mb-8 bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors duration-200">
             <h3 className="text-base md:text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
               <span className="bg-emerald-100 p-2 rounded-lg">
                 <FaUsers className="text-emerald-700 text-lg md:text-xl" />
@@ -104,7 +104,7 @@ const Informasi = () => {
               <p className="text-gray-600">Kuota siswa baru: 40 siswa</p>
               <p className="text-sm text-gray-500 mt-4">*Kuota dapat berubah sesuai kebijakan sekolah</p>
             </div>
-          </div>
+          </div> */}
 
           {/* Tahapan Seleksi */}
           <div className="mb-8 bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors duration-200">
