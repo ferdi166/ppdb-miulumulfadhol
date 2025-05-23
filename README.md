@@ -71,19 +71,29 @@ cd frontend && npm install
 cd ../backend && npm install
 ```
 
-### ⚙️ 2. Konfigurasi
+### ⚙️ 2. Konfigurasi Database
 
 ```bash
 # Setup Database
 1. Buat database MySQL baru dengan nama `ppdb-miulumulfadhol`
-2. Pastikan kredensial database sesuai:
+2. Import file SQL dari `backend/config/ppdb-miulumulfadhol.sql`
+3. Pastikan kredensial database di `backend/config/db.config.js` sesuai:
    ```js
-   username: 'root'
-   password: ''
-   host: 'localhost'
-   dialect: 'mysql'
+   {
+     HOST: "localhost",
+     USER: "root",
+     PASSWORD: "",
+     DB: "ppdb-miulumulfadhol",
+     dialect: "mysql",
+     pool: {
+       max: 5,
+       min: 0,
+       acquire: 30000,
+       idle: 10000
+     }
+   }
    ```
-3. Sesuaikan kredensial di `backend/config/db.config.js` jika berbeda
+4. Jika kredensial berbeda, sesuaikan file `backend/config/db.config.js`
 
 ### 🎯 3. Menjalankan Aplikasi
 
