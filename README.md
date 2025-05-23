@@ -85,12 +85,6 @@ cd ../backend && npm install
      PASSWORD: "",
      DB: "ppdb-miulumulfadhol",
      dialect: "mysql",
-     pool: {
-       max: 5,
-       min: 0,
-       acquire: 30000,
-       idle: 10000
-     }
    }
    ```
 4. Jika kredensial berbeda, sesuaikan file `backend/config/db.config.js`
