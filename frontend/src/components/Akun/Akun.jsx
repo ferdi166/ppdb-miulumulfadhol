@@ -48,12 +48,12 @@ const Akun = ({ username, password }) => {
 
       {/* Link kembali */}
       <div className="text-center mt-4">
-        <Link
-          to="/pendaftaran"
+        <button
+          onClick={() => window.location.href = '/pendaftaran'}
           className="text-emerald-700 hover:text-emerald-600 transition-colors duration-300"
         >
           Kembali ke Form Pendaftaran
-        </Link>
+        </button>
       </div>
     </div>
   );

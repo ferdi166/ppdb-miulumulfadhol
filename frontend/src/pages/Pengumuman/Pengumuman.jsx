@@ -54,7 +54,7 @@ const Pengumuman = () => {
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto mt-16">
+      <div className="max-w-2xl mx-auto mt-16 px-4">
         {loading ? (
           <div className="text-center">
             <p>Memuat...</p>

@@ -206,14 +206,14 @@ export const getTotalPendaftaran = async (req, res) => {
         // Hitung total pendaftar laki-laki
         const totalLakiLaki = await Pendaftaran.count({
             where: {
-                jenis_kelamin: 'L'
+                jenis_kelamin: 1
             }
         });
         
         // Hitung total pendaftar perempuan
         const totalPerempuan = await Pendaftaran.count({
             where: {
-                jenis_kelamin: 'P'
+                jenis_kelamin: 2
             }
         });
 
