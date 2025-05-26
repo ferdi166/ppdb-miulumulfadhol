@@ -118,6 +118,28 @@ export const FormProvider = ({ children, mode = 'create', pendaftaranId = null, 
     return ''
   }
 
+  // Fungsi untuk validasi tanggal lahir
+  const validateTanggalLahir = (tanggal) => {
+    if (!tanggal) return ''
+
+    const tanggalLahir = moment(tanggal)
+    const sekarang = moment()
+    const umur = sekarang.diff(tanggalLahir, 'years')
+    const minUmur = 6
+    const maxUmur = 7
+
+    if (tanggalLahir.isAfter(sekarang)) {
+      return 'Tanggal lahir tidak boleh lebih dari hari ini'
+    }
+    if (umur < minUmur) {
+      return `Umur minimal ${minUmur} tahun`
+    }
+    if (umur > maxUmur) {
+      return `Umur maksimal ${maxUmur} tahun`
+    }
+    return ''
+  }
+
   // Fungsi untuk menangani perubahan input
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -141,6 +163,9 @@ export const FormProvider = ({ children, mode = 'create', pendaftaranId = null, 
     } else if (name === 'tahunLulus') {
       const error = validateTahunLulus(value)
       setErrors(prev => ({ ...prev, tahunLulus: error }))
+    } else if (name === 'tanggalLahir') {
+      const error = validateTanggalLahir(value)
+      setErrors(prev => ({ ...prev, tanggalLahir: error }))
     }
 
     setFormData(prevState => ({

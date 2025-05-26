@@ -233,9 +233,15 @@ const FormPendaftaran = () => {
                   name="tanggalLahir"
                   value={formData.tanggalLahir}
                   onChange={handleChange}
-                  className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-700 focus:outline-none focus:border-transparent transition duration-200"
+                  className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg border ${errors.tanggalLahir ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-emerald-700 focus:outline-none focus:border-transparent transition duration-200`}
                   required
                 />
+                {errors.tanggalLahir && (
+                  <p className="mt-1 text-sm text-red-500">{errors.tanggalLahir}</p>
+                )}
+                <p className="mt-1 text-sm text-gray-500">
+                  Umur harus 6-7 tahun
+                </p>
               </div>
             </div>
 
