@@ -13,6 +13,7 @@ export const getAllPendaftaran = async () => {
             alamat: item.alamat,
             nomor_telepon: item.nomor_telepon,
             tempat_lahir: item.tempat_lahir,
+            foto: item.dok_foto,
             tanggal_lahir: moment(item.tanggal_lahir).format('DD/MM/YYYY'),
             ttl: `${item.tempat_lahir}, ${moment(item.tanggal_lahir).format('DD/MM/YYYY')}`,
             daya_tampung: item.daya_tampung?.nama || '-',
