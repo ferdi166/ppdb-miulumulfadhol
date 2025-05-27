@@ -40,6 +40,7 @@ import DashboardPendaftar from './pages/Pendaftar/Dashboard/Dashboard';
 import UploadDokumen from './pages/Pendaftar/UploadDokumen/UploadDokumen';
 import CetakBuktiPenerimaan from './pages/Pendaftar/CetakBuktiPenerimaan/CetakBuktiPenerimaan';
 import ProfilePendaftar from './pages/Pendaftar/Profile/Profile';
+import './styles/layout.css';
 
 // Layout untuk halaman admin
 const AdminLayout = () => {
@@ -59,12 +60,14 @@ const AdminLayout = () => {
             />
             <ProtectedRoute allowedGroups={[1]}> {/* Hanya grup user 1 (admin) yang bisa akses */}
                 {/* Container utama dengan overflow yang tepat */}
-                <div className="flex min-h-screen bg-gray-50">
+                <div className="layout-container">
                     {/* Sidebar */}
-                    <Sidebar />
+                    <div className="layout-sidebar">
+                        <Sidebar />
+                    </div>
 
                     {/* Konten utama dengan margin yang sesuai */}
-                    <div className="flex-1 transition-all duration-300">
+                    <div className="layout-main">
                         <Header />
 
                         {/* Area konten utama dengan padding dan scroll */}
@@ -111,12 +114,14 @@ const KepalaSekolah = () => {
             />
             <ProtectedRoute allowedGroups={[2]}> {/* Hanya grup user 2 (kepala sekolah) yang bisa akses */}
                 {/* Container utama dengan overflow yang tepat */}
-                <div className="flex min-h-screen bg-gray-50">
+                <div className="layout-container">
                     {/* Sidebar */}
-                    <Sidebar />
+                    <div className="layout-sidebar">
+                        <Sidebar />
+                    </div>
 
                     {/* Konten utama dengan margin yang sesuai */}
-                    <div className="flex-1 transition-all duration-300">
+                    <div className="layout-main">
                         <Header />
 
                         {/* Area konten utama dengan padding dan scroll */}
@@ -156,12 +161,14 @@ const Pendaftar = () => {
                 theme="colored"
             />
             <ProtectedRoute allowedGroups={[3]}> {/* Hanya grup user 3 (pendaftar) yang bisa akses */}
-                <div className="flex min-h-screen bg-gray-50">
+                <div className="layout-container">
                     {/* Sidebar */}
-                    <Sidebar />
+                    <div className="layout-sidebar">
+                        <Sidebar />
+                    </div>
 
                     {/* Konten utama dengan margin yang sesuai */}
-                    <div className="flex-1 transition-all duration-300">
+                    <div className="layout-main">
                         <Header />
 
                         {/* Area konten utama dengan padding dan scroll */}
