@@ -44,7 +44,20 @@ const Header = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [showDropdown, setShowDropdown] = useState(false);
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
+        const width = window.innerWidth;
+        return width < 1024;
+    });
     const user = getCurrentUser();
+
+    useEffect(() => {
+        const handleSidebarToggle = () => {
+            setIsSidebarCollapsed(prev => !prev);
+        };
+
+        window.addEventListener('toggleSidebar', handleSidebarToggle);
+        return () => window.removeEventListener('toggleSidebar', handleSidebarToggle);
+    }, []);
 
     // Fungsi untuk mendapatkan judul header berdasarkan path dan grup user
     const getHeaderTitle = () => {
@@ -119,7 +132,7 @@ const Header = () => {
     };
 
     return (
-        <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <header className={`layout-header bg-white border-b border-gray-200 ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
             <div className="flex items-center justify-between px-4 py-3">
                 {/* Bagian Kiri */}
                 <div className="flex items-center gap-2">
