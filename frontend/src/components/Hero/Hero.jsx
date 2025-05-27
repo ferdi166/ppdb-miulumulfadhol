@@ -62,7 +62,7 @@ const Hero = () => {
           </div>
 
           {/* Bagian kanan - Gambar */}
-          <div className="hidden md:block relative mt-8 md:mt-0">
+          <div className="block relative mt-0">
             {/* Hiasan di belakang gambar */}
             <div className="absolute -top-6 -right-6 w-56 md:w-72 h-56 md:h-72 bg-[#434794]/10 rounded-full blur-sm"></div>
             <div className="absolute -bottom-8 -left-8 w-48 md:w-64 h-48 md:h-64 bg-blue-100 rounded-full blur-sm"></div>
