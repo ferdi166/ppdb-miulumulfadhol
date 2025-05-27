@@ -7,6 +7,19 @@
   overflow-x: hidden;
 }
 
+.layout-header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 30;
+  width: calc(100% - 256px); /* Sesuai dengan lebar main content */
+  transition: width 0.3s ease;
+}
+
+.layout-header.sidebar-collapsed {
+  width: calc(100% - 64px); /* Sesuai dengan lebar main content saat sidebar collapsed */
+}
+
 .layout-sidebar {
   position: fixed;
   top: 0;
@@ -22,6 +35,7 @@
   transition: margin 0.3s ease;
   min-height: 100vh;
   width: calc(100% - 256px);
+  padding-top: 63px; /* Tinggi header */
 }
 
 .layout-main.sidebar-collapsed {
@@ -38,6 +52,15 @@
   
   .layout-main.sidebar-collapsed {
     margin-left: 0;
+    width: 100%;
+  }
+
+  .layout-header {
+    width: 100%;
+    left: 0;
+  }
+
+  .layout-header.sidebar-collapsed {
     width: 100%;
   }
 }
