@@ -113,9 +113,9 @@ const Penerimaan = () => {
         <div className="space-y-6">
             {/* Header */}
             <div className="px-2 mb-4">
-                <div className="flex justify-between items-center">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
                     <div>
-                        <h1 className="text-2xl font-semibold text-gray-800">
+                        <h1 className="text-xl sm:text-2xl font-semibold text-gray-800">
                             Penerimaan
                         </h1>
                         <p className="mt-2 text-sm text-gray-600">
@@ -125,7 +125,7 @@ const Penerimaan = () => {
                     <button
                         onClick={handleSimpanData}
                         disabled={selectedRows.length === 0 || !isJadwalAktif}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-white
+                        className={`flex items-center gap-2 w-full sm:w-auto justify-center px-4 py-2 rounded-lg text-white
                             ${selectedRows.length === 0 || !isJadwalAktif
                                 ? 'bg-gray-400 cursor-not-allowed'
                                 : 'bg-blue-600 hover:bg-blue-700'}`}

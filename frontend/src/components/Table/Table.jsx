@@ -199,19 +199,19 @@ const Table = ({
           </button>
           <button 
             onClick={handleExcel}
-            className="px-2 sm:px-3 py-1.5 text-sm text-gray-600 hover:text-gray-800"
+            className="px-2 sm:px-3 py-1.5 text-sm text-gray-600 hover:text-gray-800 relative"
           >
             Excel
           </button>
           <button 
             onClick={handleCSV}
-            className="px-2 sm:px-3 py-1.5 text-sm text-gray-600 hover:text-gray-800"
+            className="px-2 sm:px-3 py-1.5 text-sm text-gray-600 hover:text-gray-800 relative"
           >
             CSV
           </button>
           <button 
             onClick={handlePDF}
-            className="px-2 sm:px-3 py-1.5 text-sm text-gray-600 hover:text-gray-800"
+            className="px-2 sm:px-3 py-1.5 text-sm text-gray-600 hover:text-gray-800 relative"
           >
             PDF
           </button>

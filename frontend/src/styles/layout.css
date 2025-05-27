@@ -1,0 +1,43 @@
+/* Layout styles */
+.layout-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: rgb(249 250 251);
+  position: relative;
+  overflow-x: hidden;
+}
+
+.layout-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 40;
+  transition: all 0.3s ease;
+}
+
+.layout-main {
+  flex: 1;
+  margin-left: 256px; /* Lebar default sidebar */
+  transition: margin 0.3s ease;
+  min-height: 100vh;
+  width: calc(100% - 256px);
+}
+
+.layout-main.sidebar-collapsed {
+  margin-left: 64px; /* Lebar sidebar saat collapsed */
+  width: calc(100% - 64px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .layout-main {
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  .layout-main.sidebar-collapsed {
+    margin-left: 0;
+    width: 100%;
+  }
+}

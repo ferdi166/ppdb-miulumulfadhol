@@ -18,14 +18,14 @@ ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointE
  * @param {string} props.colorClass - Kelas warna untuk background (bg-color-500)
  */
 const StatisticCard = ({ icon: Icon, title, value, colorClass }) => (
-    <div className={`${colorClass} rounded-lg shadow-lg p-6`}>
+    <div className={`${colorClass} rounded-lg shadow-lg p-4 sm:p-6`}>
         <div className="flex items-center justify-between">
             <div>
                 <p className="text-white text-sm font-medium mb-1">{title}</p>
-                <h3 className="text-white text-2xl font-bold">{value}</h3>
+                <h3 className="text-white text-xl sm:text-2xl font-bold">{value}</h3>
             </div>
             <div className="bg-white/20 rounded-full p-3">
-                <Icon className="h-8 w-8 text-white" />
+                <Icon className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
             </div>
         </div>
     </div>
@@ -85,7 +85,7 @@ const DashboardStats = ({ stats = {
     return (
         <div className="space-y-8">
             {/* Grid Statistik */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {/* Total Diterima */}
                 <StatisticCard 
                     icon={FaUserGraduate}
@@ -112,12 +112,12 @@ const DashboardStats = ({ stats = {
             </div>
 
             {/* Area untuk charts */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
                 {/* Pie Chart Kapasitas - Kolom 1 */}
-                <div className="bg-white rounded-lg border border-gray-200 p-6">
-                    <div className="flex items-center justify-between mb-6">
+                <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 mb-6">
                         <h2 className="text-xl font-bold text-gray-800">Kapasitas Penerimaan</h2>
-                        <div className="flex gap-4">
+                        <div className="flex flex-wrap gap-4">
                             <div className="flex items-center">
                                 <div className="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
                                 <span className="text-sm text-gray-600">Terisi</span>
@@ -128,7 +128,7 @@ const DashboardStats = ({ stats = {
                             </div>
                         </div>
                     </div>
-                    <div className="relative h-64">
+                    <div className="relative h-48 sm:h-64">
                         <Pie 
                             data={{
                                 labels: ['Terisi', 'Tersedia'],
@@ -174,10 +174,10 @@ const DashboardStats = ({ stats = {
                 </div>
 
                 {/* Bar Chart Status Pendaftar */}
-                <div className="bg-white rounded-lg border border-gray-200 p-6">
-                    <div className="flex items-center justify-between mb-6">
+                <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 mb-6">
                         <h2 className="text-xl font-bold text-gray-800">Total Pendaftar</h2>
-                        <div className="flex gap-4">
+                        <div className="flex flex-wrap gap-4">
                             <div className="flex items-center">
                                 <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
                                 <span className="text-sm text-gray-600">Laki-laki</span>
@@ -188,7 +188,7 @@ const DashboardStats = ({ stats = {
                             </div>
                         </div>
                     </div>
-                    <div className="h-64">
+                    <div className="h-48 sm:h-64">
                         <Bar
                             data={{
                                 labels: ['Laki-laki', 'Perempuan'],
@@ -274,8 +274,8 @@ const DashboardStats = ({ stats = {
             {/* Area untuk timeline */}
             <div className="mt-8">
                 {/* Timeline Kegiatan */}
-                <div className="bg-white rounded-lg border border-gray-200 p-6">
-                    <div className="flex items-center justify-between mb-6">
+                <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 mb-6">
                         <h2 className="text-xl font-bold text-gray-800">Timeline Kegiatan</h2>
                         <div className="flex items-center gap-2">
                             <FaClock className="text-blue-500" />
@@ -296,7 +296,7 @@ const DashboardStats = ({ stats = {
 
                             return (
                                 <div key={kegiatan.id_jadwal_pendaftaran} 
-                                     className="flex items-start gap-4 p-4 rounded-xl bg-white border border-gray-100 hover:border-blue-200 hover:shadow-md transition-all duration-200">
+                                     className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-white border border-gray-100 hover:border-blue-200 hover:shadow-md transition-all duration-200">
                                     <div className="flex-shrink-0">
                                         <div className={`w-8 h-8 rounded-full flex items-center justify-center
                                             ${isPast ? 'bg-green-100' : isActive ? 'bg-blue-100' : 'bg-gray-100'}`}>
@@ -310,8 +310,8 @@ const DashboardStats = ({ stats = {
                                         </div>
                                     </div>
                                     <div className="flex-grow">
-                                        <h3 className="text-sm font-semibold text-gray-800">{kegiatan.kegiatan}</h3>
-                                        <p className="text-xs text-gray-500 mt-1">
+                                        <h3 className="text-xs sm:text-sm font-semibold text-gray-800">{kegiatan.kegiatan}</h3>
+                                        <p className="text-[10px] sm:text-xs text-gray-500 mt-1">
                                             {formatRangeTanggal(kegiatan.tanggal_mulai, kegiatan.tanggal_selesai)}
                                         </p>
                                         {isActive && (
