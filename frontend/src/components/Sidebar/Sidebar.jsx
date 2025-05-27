@@ -16,7 +16,7 @@ import {
 import { getCurrentUser } from '../../services/user.service';
 
 // Komponen untuk menu item dengan submenu
-const MenuItem = ({ icon: Icon, label, to, submenu, isActive, isCollapsed }) => {
+const MenuItem = ({ icon: Icon, label, to, submenu, isActive, isCollapsed, onMobileClick }) => {
   const [isOpen, setIsOpen] = useState(false)
   const location = useLocation()
   
@@ -29,7 +29,15 @@ const MenuItem = ({ icon: Icon, label, to, submenu, isActive, isCollapsed }) => 
         to={to}
         className={`group flex items-center ${isCollapsed ? 'p-2 justify-center' : 'p-3'} rounded-lg cursor-pointer transition-all duration-200
           ${(isActive || isSubmenuActive) ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-50 text-gray-600 hover:text-blue-600'}`}
-        onClick={(e) => submenu && (e.preventDefault(), setIsOpen(!isOpen))}
+        onClick={(e) => {
+          if (submenu) {
+            e.preventDefault()
+            setIsOpen(!isOpen)
+          } else if (window.innerWidth < 1024) {
+            // Tutup sidebar di mobile saat item menu diklik
+            onMobileClick && onMobileClick()
+          }
+        }}
       >
         <div className="relative flex items-center">
           <Icon className={`w-5 h-5 transition-all duration-200 ${isCollapsed ? '' : 'mr-3'}`} />
@@ -120,6 +128,18 @@ const Sidebar = () => {
         window.addEventListener('toggleSidebar', handleToggle)
         return () => window.removeEventListener('toggleSidebar', handleToggle)
     }, [])
+
+    // Update layout ketika sidebar state berubah
+    useEffect(() => {
+        const mainContent = document.querySelector('.layout-main')
+        if (mainContent) {
+            if (isCollapsed) {
+                mainContent.classList.add('sidebar-collapsed')
+            } else {
+                mainContent.classList.remove('sidebar-collapsed')
+            }
+        }
+    }, [isCollapsed])
 
     // Data menu sidebar berdasarkan grup user
     const getMenuItems = () => {
@@ -275,6 +295,7 @@ const Sidebar = () => {
                             {...item}
                             isActive={location.pathname === item.to}
                             isCollapsed={isCollapsed}
+                            onMobileClick={() => setIsCollapsed(true)}
                         />
                     ))}
                 </nav>
