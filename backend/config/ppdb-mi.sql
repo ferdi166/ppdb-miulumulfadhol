@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 23, 2025 at 12:13 PM
+-- Generation Time: May 29, 2025 at 04:39 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.2.24
 
@@ -92,7 +92,7 @@ CREATE TABLE `jadwal_pendaftaran` (
 INSERT INTO `jadwal_pendaftaran` (`id_jadwal_pendaftaran`, `tanggal_mulai`, `tanggal_selesai`, `kegiatan`) VALUES
 (1, '2025-01-05 00:00:00', '2025-05-31 00:00:00', 'Pendaftaran Online'),
 (2, '2025-05-15 00:00:00', '2025-06-02 16:00:00', 'Verifikasi Berkas'),
-(3, '2025-05-22 00:00:00', '2025-06-06 00:00:00', 'Pengumuman Hasil Seleksi');
+(3, '2025-05-22 00:00:00', '2025-07-20 23:00:00', 'Pengumuman Hasil Seleksi');
 
 -- --------------------------------------------------------
 
@@ -172,7 +172,7 @@ CREATE TABLE `pendaftaran` (
 
 INSERT INTO `pendaftaran` (`id_pendaftaran`, `no_pendaftaran`, `nik`, `nama_siswa`, `jenis_kelamin`, `tempat_lahir`, `tanggal_lahir`, `nama_orang_tua`, `nomor_telepon`, `alamat`, `id_jenjang_asal_sekolah`, `nama_asal_sekolah`, `tahun_lulus`, `id_user`, `dok_bukti_pembayaran`, `dok_kk`, `dok_akta`, `dok_ijazah`, `dok_ktp_orang_tua`, `dok_foto`, `waktu_daftar`, `is_diterima`, `waktu_diterima`, `id_daya_tampung`) VALUES
 (1, '01-0516184731', '3508134567890011', 'Budi Santosos', 1, 'BLITAR', '2025-05-06', 'Parsan', '081231610044', 'adegedis', '01', 'TK Suka Cita', 2025, '3508134567890011', 'dok_bukti_pembayaran/1747751476712_dok_bukti_pembayaran_download.png', 'dok_kk/1747751476698_dok_kk_download-(3).jpeg', 'dok_akta/1747751555498_dok_akta_download-(2).jpeg', 'dok_ijazah/1747751476699_dok_ijazah_download.jpeg', 'dok_ktp_orang_tua/1747751476700_dok_ktp_orang_tua_ktp.jpeg', 'dok_foto/1747894490057_dok_foto_photo.jpg', '2025-05-16 11:47:32', 1, '2025-05-22 06:13:28', 1),
-(2, '01-0522131925', '3508134567890001', 'Eda Santoso', 1, 'Blitar', '2018-01-23', 'Ahmad Santoso', '081231610777', 'jl.dr sutomo', '01', 'TK Suka Cita', 2025, '3508134567890001', 'dok_bukti_pembayaran/1747895277487_dok_bukti_pembayaran_download.png', 'dok_kk/1747895277476_dok_kk_download-(3).jpeg', 'dok_akta/1747895277475_dok_akta_download.jpeg', 'dok_ijazah/1747895277476_dok_ijazah_download-(1).jpeg', 'dok_ktp_orang_tua/1747895277482_dok_ktp_orang_tua_ktp.jpeg', 'dok_foto/1747895277487_dok_foto_photo.jpg', '2025-05-22 06:19:26', 1, NULL, 1);
+(2, '01-0522131925', '3508134567890001', 'Eda Santoso', 1, 'Blitar', '2018-01-23', 'Ahmad Santoso', '081231610777', 'jl.dr sutomo', '01', 'TK Suka Cita', 2025, '3508134567890001', 'dok_bukti_pembayaran/1747895277487_dok_bukti_pembayaran_download.png', 'dok_kk/1747895277476_dok_kk_download-(3).jpeg', 'dok_akta/1747895277475_dok_akta_download.jpeg', 'dok_ijazah/1747895277476_dok_ijazah_download-(1).jpeg', 'dok_ktp_orang_tua/1747895277482_dok_ktp_orang_tua_ktp.jpeg', 'dok_foto/1747895277487_dok_foto_photo.jpg', '2025-05-22 06:19:26', 1, '2025-05-29 16:37:34', 1);
 
 -- --------------------------------------------------------
 
@@ -198,7 +198,7 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`id_user`, `username`, `password`, `fullname`, `nomor_telepon`, `alamat`, `foto`, `jenis_kelamin`, `id_grup_user`) VALUES
 ('1', 'admin1', '$2b$10$nirLEEw5VVbEtHwwTR/Bg.1/46Am7rA73trf05OF1x5qvEF0yD9FS', 'Samroji', '0897777231123', 'Jl.Akai', 'user-1746863178230-620138237.png', 2, 1),
-('2', 'kepalasekolah', '$2b$10$yGpnzuE1G/sRtHst/R/bMe0p./eufiw20MWUCOENQqXa/6yOcvY/y', 'Sutini', NULL, NULL, 'user-1746274690994-629008759.png', 2, 2),
+('2', 'kepalasekolah', '$2b$10$yGpnzuE1G/sRtHst/R/bMe0p./eufiw20MWUCOENQqXa/6yOcvY/y', 'Sutini', '0897777231123', 'Jl.test', 'user-1746274690994-629008759.png', 2, 2),
 ('3508134567890001', '3508134567890001', '$2b$10$NhKcVYtFi56Y2iJLyPzFT.nhQL5Z47RSPrhpDfpJKuS6oRjsBLtGu', 'Eda Santoso', '081231610777', 'jl.dr sutomo', '1747895277487_dok_foto_photo.jpg', 1, 3),
 ('3508134567890011', '3508134567890011', '$2b$10$6sgTgg/k/MGHExBmPxOkpO7bJmF5RCzG84obd3SLJoXnMjI.hzPdS', 'Budi Santoso', '081231610044', 'dasdadasdada', '1747894490057_dok_foto_photo.jpg', 1, 3);
 
