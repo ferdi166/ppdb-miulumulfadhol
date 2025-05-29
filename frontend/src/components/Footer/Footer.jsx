@@ -41,7 +41,7 @@ const Footer = () => {
 
             {/* Tautan Google Maps */}
             <Link 
-              to="https://www.google.com/maps/place/Sekolah+Dasar+Kupu+-+Kupu/@-6.2479917,106.8107212,17z/data=!3m1!4b1!4m5!3m4!1s0x2e69f17cc203cf23:0xf23b539bf568ca61!8m2!3d-6.247976!4d106.812917" 
+              to="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3949.715593333863!2d112.16395779999999!3d-8.1304103!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e78ebf361513f99%3A0x63e1adc74b0d779a!2sMI%20Ulumul%20Fadhol!5e0!3m2!1sid!2sid!4v1744469885410!5m2!1sid!2sid" 
               target="_blank"
               className="flex items-center gap-2 hover:text-gray-200 transition-colors"
             >
@@ -88,7 +88,7 @@ const Footer = () => {
               </Link>
               {/* WhatsApp */}
               <Link 
-                to="https://api.whatsapp.com/send/?phone=6281280163958&text&type=phone_number&app_absent=0" 
+                to="https://api.whatsapp.com/send/?phone=6285804276710&text&type=phone_number&app_absent=0" 
                 target="_blank"
                 className="bg-white p-2 rounded-full hover:bg-gray-200 transition-colors"
                 aria-label="WhatsApp MI Ulumul Fadhol"

@@ -36,7 +36,7 @@ const ScrollToTop = () => {
       {isVisible && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-4 right-4 bg-[#434794] text-white p-3 rounded-full shadow-lg hover:bg-[#363783] transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#434794] focus:ring-opacity-50"
+          className="fixed bottom-4 right-4 bg-emerald-500 text-white p-3 rounded-full shadow-lg hover:bg-emerald-600 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-opacity-50"
           aria-label="Scroll ke atas"
         >
           <FaArrowUp className="text-xl" />

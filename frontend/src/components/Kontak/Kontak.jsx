@@ -91,7 +91,7 @@ const Kontak = () => {
               </div>
               <div>
                 <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-1">WhatsApp:</h3>
-                <a href="https://api.whatsapp.com/send/?phone=6281280163958&text&type=phone_number&app_absent=0" className="text-sm md:text-base text-emerald-700 hover:text-emerald-800 font-medium">
+                <a href="https://api.whatsapp.com/send/?phone=6285804276710&text&type=phone_number&app_absent=0" className="text-sm md:text-base text-emerald-700 hover:text-emerald-800 font-medium">
                   Bu Retno (0858-0427-6710)
                 </a>
               </div>
