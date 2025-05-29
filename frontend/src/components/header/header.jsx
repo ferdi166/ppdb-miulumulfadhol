@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { RiNotificationLine, RiMoonLine, RiUserLine, RiLogoutBoxLine } from 'react-icons/ri';
 import { getCurrentUser } from '../../services/user.service';
@@ -49,6 +49,21 @@ const Header = () => {
         return width < 1024;
     });
     const user = getCurrentUser();
+    const dropdownRef = useRef(null); // Ref untuk dropdown container
+
+    // Event listener untuk menutup dropdown ketika klik di luar
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setShowDropdown(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     useEffect(() => {
         const handleSidebarToggle = () => {
@@ -148,26 +163,9 @@ const Header = () => {
                 </div>
 
                 {/* Bagian Kanan */}
-                <div className="flex items-center gap-2">                
-                    {/* Tombol Notifikasi */}
-                    <div className="relative">
-                        <HeaderButton 
-                            icon={RiNotificationLine}
-                            onClick={() => {}}
-                            title="Notifikasi"
-                        />
-                        <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
-                    </div>
-
-                    {/* Tombol Dark Mode */}
-                    <HeaderButton 
-                        icon={RiMoonLine}
-                        onClick={() => {}}
-                        title="Dark Mode"
-                    />
-
+                <div className="flex items-center gap-2">                                    
                     {/* Avatar dengan Dropdown */}
-                    <div className="relative">
+                    <div className="relative" ref={dropdownRef}>
                         <button 
                             className="flex items-center gap-2 p-1 rounded-lg hover:bg-gray-100 transition-colors duration-200"
                             onClick={() => setShowDropdown(!showDropdown)}
@@ -175,7 +173,7 @@ const Header = () => {
                             <img
                                 src={user?.foto ? `${baseURL}/uploads/users/${user.foto}` : `https://ui-avatars.com/api/?name=${user?.fullname || 'User'}&background=random`}
                                 alt={user?.fullname || 'User'}
-                                className="w-8 h-8 rounded-full object-cover object-top"
+                                className="w-8 h-8 rounded-full object-contain object-center"
                                 style={{ objectPosition: 'center 15%' }}
                             />
                             <span className="text-sm font-medium text-gray-700 hidden md:block">
