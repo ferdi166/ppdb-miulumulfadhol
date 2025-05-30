@@ -4,6 +4,7 @@ import { FaEdit } from 'react-icons/fa';
 import EditUser from './EditUser';
 import { getAllUser, updateUser } from '../../../services/user.service';
 import { baseURL } from '../../../services/api.service';
+import { toast } from 'react-toastify';
 
 /**
  * Halaman Data User untuk menampilkan daftar user
@@ -25,10 +26,10 @@ const DataUser = () => {
             // Refresh data setelah update
             const updatedData = await getAllUser();
             setDataUser(updatedData);
-            alert('Data user berhasil diperbarui');
+            toast.success('Data user berhasil diperbarui');
         } catch (error) {
             console.error('Error updating user:', error);
-            alert('Gagal mengupdate user: ' + error.message);
+            toast.error('Gagal mengupdate user: ' + error.message);
         }
     };
 

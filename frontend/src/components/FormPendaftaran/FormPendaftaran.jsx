@@ -97,7 +97,7 @@ const FormPendaftaran = ({ mode = 'create' }) => {
       if (result.success) {
         if (result.message) {
           // Mode edit - tampilkan pesan sukses
-          // alert(result.message)
+          alert(result.message)
           window.location.href = '/admin/data-pendaftar'
         } else {
           // Mode create - tampilkan credentials
