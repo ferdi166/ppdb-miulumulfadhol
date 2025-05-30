@@ -60,9 +60,21 @@ export const getUserById = async (id_user) => {
     }
 }
 
-export const updateUser = async (id_user, formData) => {
+export const updateUser = async (id_user, data) => {
     try {
-        const response = await api.put(`/user/${id_user}`, formData);
+        // Buat FormData untuk mengirim file
+        const formData = new FormData();
+        
+        // Tambahkan semua field ke FormData
+        Object.keys(data).forEach(key => {
+            formData.append(key, data[key]);
+        });
+
+        const response = await api.put(`/user/${id_user}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
         return response.data;
     } catch (error) {
         console.error('Error updating user:', error);

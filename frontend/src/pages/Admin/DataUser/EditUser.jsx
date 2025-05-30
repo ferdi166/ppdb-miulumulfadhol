@@ -32,7 +32,7 @@ const EditUser = ({ isOpen, onClose, userData, onSubmit }) => {
             fullname: form.fullname.value,
             nomor_telepon: form.nomor_telepon.value,
             alamat: form.alamat.value,
-            jenis_kelamin: form.jenis_kelamin.value === 'laki-laki' ? 1 : 2,
+            jenis_kelamin: form.jenis_kelamin.value === 'Laki-laki' ? 1 : 2,
             id_grup_user: form.id_grup_user.value
         };
         
@@ -41,12 +41,11 @@ const EditUser = ({ isOpen, onClose, userData, onSubmit }) => {
         if (form.foto.files[0]) formValues.foto = form.foto.files[0];
 
         try {
-            await onSubmit(formValues);
-            alert('Data user berhasil diperbarui!');
+            await onSubmit(formValues);            
             onClose();
         } catch (error) {
             console.error('Error:', error);
-            alert('Gagal update: ' + (error.response?.data?.message || error.message));
+            console.log('Gagal update: ' + (error.response?.data?.message || error.message));
         }
     };
 
