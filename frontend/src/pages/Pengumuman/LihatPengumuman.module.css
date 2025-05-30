@@ -1,0 +1,217 @@
+/* Reset CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@page {
+    size: A4;
+    margin: 0;
+}
+
+.container {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f0f0f0;
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+/* Tombol Print */
+.printButton {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background-color: #0d7226;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.printButton:hover {
+    background-color: #094b19;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+}
+
+.printButton svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+/* Kertas Styles */
+.paper {
+    width: 210mm;
+    margin: 0 auto;
+    background: none;
+}
+
+/* Page Styles */
+.page {
+    width: 21cm;
+    min-height: 29.7cm;
+    padding: 2cm;
+    position: relative;
+    background: white;
+    margin-bottom: 3rem;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    /* page-break-after: always; */
+    box-sizing: border-box;
+}
+
+.page:last-child {
+    margin-bottom: 0;
+}
+
+/* Header Styles */
+.header {
+    text-align: center;
+    margin-bottom: 2cm;
+}
+
+.logo {
+    width: 80px;
+    height: auto;
+    margin: 0 auto 1rem;
+    display: block;
+}
+
+.schoolName {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+}
+
+.title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+}
+
+.subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
+/* Table Styles */
+.tableContainer {
+    margin-top: 2rem;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table thead {
+    display: table-header-group;
+}
+
+.table tr {
+    page-break-inside: avoid;
+}
+
+.table th,
+.table td {
+    border: 1px solid #000;
+    padding: 0.5rem;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.table th {
+    background-color: #000000 !important;
+    color: white;
+    font-weight: normal;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Print Styles */
+@media print {
+    @page {
+        size: A4;
+        margin: 0;
+    }
+
+    body {
+        margin: 0;
+    }
+
+    .container {
+        background: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .printButton {
+        display: none;
+    }
+
+    .paper {
+        width: 21cm;
+        margin: 0;
+        background: none;
+        box-shadow: none;
+    }
+
+    .page {
+        width: 21cm;
+        min-height: 29.7cm;
+        margin: 0;
+        padding: 2cm;
+        box-shadow: none;
+        background: white;
+        box-sizing: border-box;
+    }
+
+    .table {
+        page-break-inside: auto;
+    }
+
+    .table tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+
+    .table thead {
+        display: table-header-group;
+    }
+
+    .table tfoot {
+        display: table-footer-group;
+    }
+}
+
+/* Loading & Error States */
+.loading, .error {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.2rem;
+}
+
+.error {
+    color: #dc3545;
+}
+
+.loading {
+    color: #0d7226;
+}

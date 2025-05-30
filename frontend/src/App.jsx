@@ -17,6 +17,7 @@ import PendaftaranAdmin from './pages/Admin/Pendaftaran/Pendaftaran';
 import Pendaftaran from './pages/Pendaftaran/Pendaftaran';
 
 import Pengumuman from './pages/Pengumuman/Pengumuman';
+import LihatPengumuman from './pages/Pengumuman/LihatPengumuman';
 import Informasi from './pages/Informasi/Informasi';
 import Penerimaan from './pages/Admin/Penerimaan/Penerimaan';
 import Login from './pages/Login/Login';
@@ -194,12 +195,24 @@ const App = () => {
     const location = useLocation();
     // Menggunakan exact path untuk halaman publik
     const isPublicPage = ["/", "/pendaftaran", "/pengumuman", "/informasi"].includes(location.pathname);
+    const isPengumumanPage = location.pathname === "/lihat-pengumuman";
     const isAdminPage = location.pathname.startsWith('/admin');
     const isKepalaSekolahPage = location.pathname.startsWith('/kepala-sekolah');
     const isPendaftarPage = location.pathname.startsWith('/pendaftar');
     const isLoginPage = location.pathname === '/login';
 
-    // Render layout berdasarkan jenis halaman
+    // Layout khusus untuk halaman pengumuman (tanpa navbar & footer)
+    if (isPengumumanPage) {
+        return (
+            <div className="min-h-screen">
+                <Routes>
+                    <Route path="/lihat-pengumuman" element={<LihatPengumuman />} />
+                </Routes>
+            </div>
+        );
+    }
+
+    // Render layout untuk halaman publik dengan navbar & footer
     if (isPublicPage) {
         return (
             <div className="min-h-screen flex flex-col">
@@ -224,6 +237,7 @@ const App = () => {
                         <Route path="/" element={<Beranda />} />
                         <Route path="/pendaftaran" element={<Pendaftaran />} />
                         <Route path="/pengumuman" element={<Pengumuman />} />
+                        <Route path="/lihat-pengumuman" element={<LihatPengumuman />} />
                         <Route path="/informasi" element={<Informasi />} />
                     </Routes>
                 </main>

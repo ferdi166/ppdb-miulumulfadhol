@@ -36,7 +36,7 @@ const Pengumuman = () => {
 
   // Fungsi untuk membuka hasil seleksi di tab baru
   const handleLihatHasil = () => {
-    window.open('/pengumuman.html', '_blank')
+    window.location.href = '/lihat-pengumuman'
   }
 
   return (
