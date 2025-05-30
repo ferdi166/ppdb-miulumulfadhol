@@ -100,7 +100,7 @@ const FormPendaftaran = ({ mode = 'create' }) => {
           // Mode edit - tunggu toast muncul sebelum redirect (0.5 detik)
           setTimeout(() => {
             window.location.href = '/admin/data-pendaftar'
-          }, 100)
+          }, 1000)
         } else {
           // Mode create - tampilkan credentials
           setCredentials({
