@@ -10,7 +10,7 @@ import moment from 'moment-timezone'
  * Komponen untuk menampilkan formulir pendaftaran peserta didik baru
  * Menampilkan informasi akun setelah berhasil submit
  */
-const FormPendaftaran = () => {
+const FormPendaftaran = ({ mode = 'create' }) => {
   // State untuk tracking status submit dan kredensial akun
   const [isSuccess, setIsSuccess] = useState(false)
   const [credentials, setCredentials] = useState({ username: '', password: '' })
@@ -34,9 +34,16 @@ const FormPendaftaran = () => {
     }
   };
 
-  // Cek jadwal pendaftaran dan kuota saat komponen dimount
+  // Cek jadwal pendaftaran dan kuota saat komponen dimount dan hanya untuk pendaftaran baru
   useEffect(() => {
     const cekJadwalPendaftaran = async () => {
+      // Skip pengecekan jika mode edit
+      if (mode === 'edit') {
+        setIsJadwalAktif(true);
+        setKuotaTersedia(true);
+        return;
+      }
+
       try {
         const jadwalPendaftaran = await getJadwalPendaftaranById(1) // ID 1 untuk pendaftaran online
         if (jadwalPendaftaran) {
@@ -53,8 +60,8 @@ const FormPendaftaran = () => {
           }
         };
 
-        // Jika jadwal aktif, cek kuota
-        if (isJadwalAktif) {
+        // Jika jadwal aktif dan mode create, cek kuota
+        if (isJadwalAktif && mode === 'create') {
           await cekKuotaPendaftaran();
         }
       } catch (error) {
@@ -71,9 +78,16 @@ const FormPendaftaran = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     
-    if (!isJadwalAktif) {
-      alert(pesanJadwal)
-      return
+    // Cek jadwal dan kuota hanya untuk mode create
+    if (mode === 'create') {
+      if (!isJadwalAktif) {
+        alert(pesanJadwal)
+        return
+      }
+      if (!kuotaTersedia) {
+        alert('Mohon maaf, kuota pendaftaran sudah penuh')
+        return
+      }
     }
     
     try {
@@ -99,8 +113,8 @@ const FormPendaftaran = () => {
     }
   }
 
-  // Tampilkan pesan jika kuota sudah penuh
-  if (!kuotaTersedia && infoKuota) {
+  // Tampilkan pesan jika kuota sudah penuh (hanya untuk mode create)
+  if (mode === 'create' && !kuotaTersedia && infoKuota) {
     return (
       <div className="w-full bg-red-200 rounded p-8 text-center">
         <h2 className="text-2xl font-bold text-gray-800 mb-2">KUOTA PENDAFTARAN PENUH</h2>
@@ -113,8 +127,8 @@ const FormPendaftaran = () => {
     )
   }
 
-  // Tampilkan pesan jika jadwal tidak aktif
-  if (!isJadwalAktif) {
+  // Tampilkan pesan jika jadwal tidak aktif (hanya untuk mode create)
+  if (mode === 'create' && !isJadwalAktif) {
     return (
       <div className="w-full bg-red-200 rounded p-8 text-center">
         <h2 className="text-2xl font-bold text-gray-800 mb-2">PENDAFTARAN SUDAH DITUTUP</h2>

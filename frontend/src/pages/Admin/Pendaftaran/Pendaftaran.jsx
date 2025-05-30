@@ -11,7 +11,7 @@ const PendaftaranAdmin = () => {
         <FormProvider>
             <div className="container mx-auto">
                 <h1 className="text-2xl font-semibold mb-6">Form Pendaftaran Siswa</h1>
-                <FormPendaftaran />
+                <FormPendaftaran mode="create" />
             </div>
         </FormProvider>
     );

@@ -65,7 +65,7 @@ const EditDataPendaftar = () => {
                         Kembali
                     </button>
                 </div>
-                <FormPendaftaran isAdmin={true} />
+                <FormPendaftaran isAdmin={true} mode="edit" />
             </div>
         </FormProvider>
     );

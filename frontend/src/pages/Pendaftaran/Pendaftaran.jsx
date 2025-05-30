@@ -44,7 +44,7 @@ const Pendaftaran = () => {
               <div className="absolute w-16 h-16 bg-emerald-700/10 rounded-full transform rotate-45 bottom-16 left-16"></div>
             </div>
           </div>
-          <FormPendaftaran />
+          <FormPendaftaran mode="create" />
         </div>
       </FormProvider>
     </main>
