@@ -82,11 +82,11 @@ const FormPendaftaran = ({ mode = 'create' }) => {
     // Cek jadwal dan kuota hanya untuk mode create
     if (mode === 'create') {
       if (!isJadwalAktif) {
-        alert(pesanJadwal)
+        toast.error(pesanJadwal)
         return
       }
       if (!kuotaTersedia) {
-        alert('Mohon maaf, kuota pendaftaran sudah penuh')
+        toast.error('Mohon maaf, kuota pendaftaran sudah penuh')
         return
       }
     }
@@ -97,8 +97,10 @@ const FormPendaftaran = ({ mode = 'create' }) => {
 
       if (result.success) {
         if (result.message) {
-          // Mode edit - redirect ke halaman data pendaftar
-          window.location.href = '/admin/data-pendaftar'
+          // Mode edit - tunggu toast muncul sebelum redirect (0.5 detik)
+          setTimeout(() => {
+            window.location.href = '/admin/data-pendaftar'
+          }, 100)
         } else {
           // Mode create - tampilkan credentials
           setCredentials({
