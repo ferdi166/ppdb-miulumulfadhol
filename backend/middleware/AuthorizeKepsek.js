@@ -2,7 +2,7 @@ import User from '../models/user.model.js';
 import GrupUser from '../models/grup_user.model.js';
 
 // Middleware untuk mengecek apakah user adalah pendaftar
-export const AuthorizePendaftar = async (req, res, next) => {
+export const AuthorizeKepsek = async (req, res, next) => {
     try {
         // Ambil id_user dari request (yang sudah diset oleh VerifyToken middleware)
         const userId = req.userId;
@@ -21,11 +21,11 @@ export const AuthorizePendaftar = async (req, res, next) => {
             });
         }
 
-        // Cek apakah grup user adalah PENDAFTAR
-        if (user.grup_user.id_grup_user !== 3) {
+        // Cek apakah grup user adalah Kepsek
+        if (user.grup_user.id_grup_user !== 2) {
             return res.status(403).json({
                 status: false,
-                message: "Akses ditolak. Anda bukan pendaftar"
+                message: "Akses ditolak. Anda bukan Kepala Sekolah"
             });
         }
 
@@ -35,7 +35,7 @@ export const AuthorizePendaftar = async (req, res, next) => {
     } catch (error) {
         return res.status(500).json({
             status: false,
-            message: "Terjadi kesalahan saat mengotorisasi pendaftar",
+            message: "Terjadi kesalahan saat mengotorisasi Kepala Sekolah",
             error: error.message
         });
     }

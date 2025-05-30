@@ -21,10 +21,10 @@ const router = express.Router();
 
 router.get('/', VerifyTokens, AuthorizeAdmin, getAllUser);
 // router.get('/', getAllUser);
-router.get('/:id', getUserById);
+router.get('/:id', VerifyTokens, AuthorizeAdmin, getUserById);
 router.post('/', uploadUser.single('foto'), handleMulterError, createUser);
 router.put('/:id', uploadUser.single('foto'), handleMulterError, updateUser);
 router.put('/edit-password/:id', editPassword);
-router.delete('/:id', deleteUser);
+router.delete('/:id', VerifyTokens, AuthorizeAdmin, deleteUser);
 
 export default router;

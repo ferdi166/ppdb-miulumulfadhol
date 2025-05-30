@@ -2,19 +2,6 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 
-// Konfigurasi penyimpanan
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        // Menentukan folder penyimpanan foto
-        cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
-        // Membuat nama file unik dengan timestamp
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-    }
-});
-
 // Konfigurasi penyimpanan untuk foto user
 export const userStorage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -41,16 +28,6 @@ export const fileFilter = (req, file, cb) => {
         cb(new Error('Format file tidak didukung. Gunakan format JPG, JPEG atau PNG'), false);
     }
 };
-
-// Konfigurasi multer
-const upload = multer({
-    storage: storage,
-    fileFilter: fileFilter,
-    limits: {
-        // Batasan ukuran file (5MB)
-        fileSize: 5 * 1024 * 1024
-    }
-});
 
 // Konfigurasi multer untuk user
 export const uploadUser = multer({
@@ -153,31 +130,6 @@ export const handleMulterError = (err, req, res, next) => {
     }
     
     if (err) {
-        return res.status(400).json({
-            status: false,
-            message: err.message
-        });
-    }
-    next();
-};
-
-// Middleware untuk menangani error upload
-export const handleUploadError = (err, req, res, next) => {
-    if (err instanceof multer.MulterError) {
-        // Error dari multer
-        if (err.code === 'LIMIT_FILE_SIZE') {
-            return res.status(400).json({
-                status: false,
-                message: 'Ukuran file terlalu besar. Maksimal 2MB.'
-            });
-        }
-        return res.status(400).json({
-            status: false,
-            message: 'Error saat upload file.',
-            error: err.message
-        });
-    } else if (err) {
-        // Error lainnya
         return res.status(400).json({
             status: false,
             message: err.message
