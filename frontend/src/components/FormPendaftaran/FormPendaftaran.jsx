@@ -5,6 +5,7 @@ import Akun from '../Akun/Akun'
 import { getJadwalPendaftaranById } from '../../services/penjadwalan.service'
 import { checkKuotaPendaftaran } from '../../services/checkKuota.service'
 import moment from 'moment-timezone'
+import { toast } from 'react-toastify'
 
 /**
  * Komponen untuk menampilkan formulir pendaftaran peserta didik baru
@@ -96,8 +97,7 @@ const FormPendaftaran = ({ mode = 'create' }) => {
 
       if (result.success) {
         if (result.message) {
-          // Mode edit - tampilkan pesan sukses
-          toast.success(result.message)
+          // Mode edit - redirect ke halaman data pendaftar
           window.location.href = '/admin/data-pendaftar'
         } else {
           // Mode create - tampilkan credentials
