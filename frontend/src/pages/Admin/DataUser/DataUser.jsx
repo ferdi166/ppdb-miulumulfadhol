@@ -19,17 +19,36 @@ const DataUser = () => {
     // State untuk menyimpan data user
     const [dataUser, setDataUser] = useState([]);
 
+    // State untuk loading
+    const [isLoading, setIsLoading] = useState(false);
+
+    // Fungsi untuk mengambil data user
+    const fetchUsers = async () => {
+        try {
+            setIsLoading(true);
+            const data = await getAllUser();
+            setDataUser(data);
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            toast.error('Gagal mengambil data user');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     // Handle submit form edit user
     const handleSubmit = async (formData) => {
         try {
+            setIsLoading(true);
             await updateUser(selectedUser.id_user, formData);
-            // Refresh data setelah update
-            const updatedData = await getAllUser();
-            setDataUser(updatedData);
+            await fetchUsers(); // Refresh data setelah update
+            setShowModal(false);
             toast.success('Data user berhasil diperbarui');
         } catch (error) {
             console.error('Error updating user:', error);
             toast.error('Gagal mengupdate user: ' + error.message);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -48,6 +67,9 @@ const DataUser = () => {
     }, [isCollapsed]);
 
     // Fetch data user saat komponen dimount
+    useEffect(() => {
+        fetchUsers();
+    }, []);
     useEffect(() => {
         getAllUser()
             .then(data => setDataUser(data))
@@ -160,12 +182,18 @@ const DataUser = () => {
                 {/* Tabel dengan container responsif */}
                 <div className="flex justify-center">
                     <div className="w-full">
+                        {isLoading ? (
+                            <div className="flex justify-center items-center h-32">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                            </div>
+                        ) : (
                             <Table 
                                 data={dataUser}
                                 columns={columns}
                                 showCheckbox={false}
                                 isSidebarOpen={!isCollapsed}
                             />
+                        )}
                     </div>
                 </div>
             </div>

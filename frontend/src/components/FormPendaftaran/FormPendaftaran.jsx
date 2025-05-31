@@ -386,18 +386,29 @@ const FormPendaftaran = ({ mode = 'create' }) => {
                 <label className="block text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
                   Jenjang Sekolah <span className="text-red-500">*</span>
                 </label>
-                <select
-                  name="id_jenjang_asal_sekolah"
-                  value={formData.id_jenjang_asal_sekolah}
-                  onChange={handleChange}
-                  className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-700 focus:outline-none focus:border-transparent transition duration-200"
-                  required
-                >
+                {mode === 'edit' ? (
+                  // Tampilkan input readonly saat mode edit
+                  <input
+                    type="text"
+                    value={formData.id_jenjang_asal_sekolah === '01' ? 'TK' : 'RA'}
+                    className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg border border-gray-300 bg-gray-100 focus:ring-2 focus:ring-emerald-700 focus:outline-none focus:border-transparent transition duration-200"
+                    readOnly
+                  />
+                ) : (
+                  // Tampilkan select saat mode create
+                  <select
+                    name="id_jenjang_asal_sekolah"
+                    value={formData.id_jenjang_asal_sekolah}
+                    onChange={handleChange}
+                    className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-700 focus:outline-none focus:border-transparent transition duration-200"
+                    required
+                  >
                   <option value="">Pilih Jenjang</option>
                   {/* Opsi jenjang sekolah akan diisi dari API */}
                   <option value="01">TK</option>
                   <option value="02">RA</option>                  
-                </select>
+                  </select>
+                )}
               </div>
 
               <div className="col-span-1 sm:col-span-2">
@@ -410,8 +421,9 @@ const FormPendaftaran = ({ mode = 'create' }) => {
                   value={formData.nama_asal_sekolah}
                   onChange={handleChange}
                   placeholder="Masukkan nama sekolah asal"
-                  className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-700 focus:outline-none focus:border-transparent transition duration-200"
+                  className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg border border-gray-300 ${mode === 'edit' ? 'bg-gray-100' : ''} focus:ring-2 focus:ring-emerald-700 focus:outline-none focus:border-transparent transition duration-200`}
                   required
+                  readOnly={mode === 'edit'}
                 />
               </div>
             </div>
@@ -443,8 +455,9 @@ const FormPendaftaran = ({ mode = 'create' }) => {
                 }}
                 placeholder="Contoh: 2025"
                 maxLength="4"
-                className={`w-full px-4 py-2.5 rounded-lg border ${errors.tahunLulus ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-emerald-700 focus:outline-none focus:border-transparent transition duration-200`}
+                className={`w-full px-4 py-2.5 rounded-lg border ${errors.tahunLulus ? 'border-red-500' : 'border-gray-300'} ${mode === 'edit' ? 'bg-gray-100' : ''} focus:ring-2 focus:ring-emerald-700 focus:outline-none focus:border-transparent transition duration-200`}
                 required
+                readOnly={mode === 'edit'}
               />
               {errors.tahunLulus && (
                 <p className="mt-1 text-sm text-red-500">{errors.tahunLulus}</p>
