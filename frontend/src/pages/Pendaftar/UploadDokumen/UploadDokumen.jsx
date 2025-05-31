@@ -556,7 +556,8 @@ const UploadDokumen = () => {
                                                 alt={`Preview ${doc.name}`}
                                                 className="max-w-[150px] sm:max-w-[200px] max-h-[150px] sm:max-h-[200px] rounded-lg shadow-sm border border-gray-200 object-contain bg-gray-50 hover:border-blue-300 transition-colors"
                                             />
-                                            {newDocuments[doc.id] && ( // Hanya tampilkan tombol hapus untuk dokumen baru
+                                            {/* Tampilkan tombol hapus hanya untuk dokumen yang baru diupload dan belum disimpan */}
+                                            {newDocuments[doc.id] && documentFiles[doc.id] && (
                                                 <button
                                                     type="button"
                                                     onClick={() => removeDocument(doc.id)}
