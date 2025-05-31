@@ -19,46 +19,17 @@ const DataUser = () => {
     // State untuk menyimpan data user
     const [dataUser, setDataUser] = useState([]);
 
-    // State untuk loading dan mounted
-    const [isLoading, setIsLoading] = useState(true);
-    const [isMounted, setIsMounted] = useState(false);
-
-    // Fungsi untuk mengambil data user
-    const fetchUsers = async () => {
-        if (!isMounted) return;
-        
-        try {
-            setIsLoading(true);
-            const data = await getAllUser();
-            if (isMounted) {
-                setDataUser(data);
-                console.log('Data berhasil diambil:', data); // Debug log
-            }
-        } catch (error) {
-            console.error('Error fetching users:', error);
-            if (isMounted) {
-                toast.error('Gagal mengambil data user');
-            }
-        } finally {
-            if (isMounted) {
-                setIsLoading(false);
-            }
-        }
-    };
-
     // Handle submit form edit user
     const handleSubmit = async (formData) => {
         try {
-            setIsLoading(true);
             await updateUser(selectedUser.id_user, formData);
-            await fetchUsers(); // Refresh data setelah update
-            setShowModal(false);
+            // Refresh data setelah update
+            const updatedData = await getAllUser();
+            setDataUser(updatedData);
             toast.success('Data user berhasil diperbarui');
         } catch (error) {
             console.error('Error updating user:', error);
             toast.error('Gagal mengupdate user: ' + error.message);
-        } finally {
-            setIsLoading(false);
         }
     };
 
@@ -76,20 +47,12 @@ const DataUser = () => {
         return () => window.removeEventListener('toggleSidebar', handleToggle);
     }, [isCollapsed]);
 
-    // Set mounted state saat komponen dimount
+    // Fetch data user saat komponen dimount
     useEffect(() => {
-        setIsMounted(true);
-        return () => setIsMounted(false);
+        getAllUser()
+            .then(data => setDataUser(data))
+            .catch(error => console.error('Error:', error));
     }, []);
-
-    // Fetch data user saat komponen dimount dan mounted state berubah
-    useEffect(() => {
-        if (isMounted) {
-            console.log('Fetching users...'); // Debug log
-            fetchUsers();
-        }
-    }, [isMounted]);
-
 
     // Konfigurasi kolom tabel
     const columns = [
@@ -197,18 +160,12 @@ const DataUser = () => {
                 {/* Tabel dengan container responsif */}
                 <div className="flex justify-center">
                     <div className="w-full">
-                        {isLoading ? (
-                            <div className="flex justify-center items-center h-32">
-                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-                            </div>
-                        ) : (
                             <Table 
                                 data={dataUser}
                                 columns={columns}
                                 showCheckbox={false}
                                 isSidebarOpen={!isCollapsed}
                             />
-                        )}
                     </div>
                 </div>
             </div>
