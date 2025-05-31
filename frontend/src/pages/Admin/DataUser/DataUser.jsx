@@ -19,20 +19,30 @@ const DataUser = () => {
     // State untuk menyimpan data user
     const [dataUser, setDataUser] = useState([]);
 
-    // State untuk loading
-    const [isLoading, setIsLoading] = useState(false);
+    // State untuk loading dan mounted
+    const [isLoading, setIsLoading] = useState(true);
+    const [isMounted, setIsMounted] = useState(false);
 
     // Fungsi untuk mengambil data user
     const fetchUsers = async () => {
+        if (!isMounted) return;
+        
         try {
             setIsLoading(true);
             const data = await getAllUser();
-            setDataUser(data);
+            if (isMounted) {
+                setDataUser(data);
+                console.log('Data berhasil diambil:', data); // Debug log
+            }
         } catch (error) {
             console.error('Error fetching users:', error);
-            toast.error('Gagal mengambil data user');
+            if (isMounted) {
+                toast.error('Gagal mengambil data user');
+            }
         } finally {
-            setIsLoading(false);
+            if (isMounted) {
+                setIsLoading(false);
+            }
         }
     };
 
@@ -66,15 +76,20 @@ const DataUser = () => {
         return () => window.removeEventListener('toggleSidebar', handleToggle);
     }, [isCollapsed]);
 
-    // Fetch data user saat komponen dimount
+    // Set mounted state saat komponen dimount
     useEffect(() => {
-        fetchUsers();
+        setIsMounted(true);
+        return () => setIsMounted(false);
     }, []);
+
+    // Fetch data user saat komponen dimount dan mounted state berubah
     useEffect(() => {
-        getAllUser()
-            .then(data => setDataUser(data))
-            .catch(error => console.error('Error:', error));
-    }, []);
+        if (isMounted) {
+            console.log('Fetching users...'); // Debug log
+            fetchUsers();
+        }
+    }, [isMounted]);
+
 
     // Konfigurasi kolom tabel
     const columns = [
