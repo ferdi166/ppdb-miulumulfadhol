@@ -357,19 +357,35 @@ const UploadDokumen = () => {
             }
 
             setLoading(true);
-            // Upload dokumen
-            await uploadDokumen(pendaftaran.id, formData);
-            toast.success('Dokumen berhasil diupload');
-            
-            // Refresh data dan reset form
-            await fetchData();
-            setDocumentFiles({});
-            setDocumentNames({});
-            setDocumentPreviews({});
-            setDocumentStatus({});
-            if (isNewPhoto) {
-                setIsNewPhoto(false);
-                setOriginalPhoto(profileImage);
+            try {
+                // Upload dokumen
+                await uploadDokumen(pendaftaran.id, formData);
+                toast.success('Dokumen berhasil diupload');
+                
+                // Simpan preview dokumen yang baru diupload
+                const newPreviews = { ...documentPreviews };
+                documents.forEach(doc => {
+                    if (documentFiles[doc.id]) {
+                        newPreviews[doc.id] = URL.createObjectURL(documentFiles[doc.id]);
+                    }
+                });
+                
+                // Update state
+                setDocumentPreviews(newPreviews);
+                setDocumentFiles({});
+                setDocumentNames({});
+                setDocumentStatus({});
+                if (isNewPhoto) {
+                    setIsNewPhoto(false);
+                    setOriginalPhoto(profileImage);
+                }
+                
+                // Refresh data dari server
+                await fetchData();
+            } catch (error) {
+                throw error;
+            } finally {
+                setLoading(false);
             }
 
         } catch (error) {
