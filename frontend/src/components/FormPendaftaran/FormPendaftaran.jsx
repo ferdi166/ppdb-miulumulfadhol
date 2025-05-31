@@ -171,20 +171,21 @@ const FormPendaftaran = ({ mode = 'create' }) => {
                 value={formData.nik}
                 onChange={(e) => {
                   // Hanya terima angka
-                  const value = e.target.value.replace(/\D/g, '')
-                  // Batasi maksimal 16 digit
-                  if (value.length <= 16) {
-                    handleChange({
-                      target: {
-                        name: 'nik',
-                        value: value
-                      }
-                    })
-                  }
+                    const value = e.target.value.replace(/\D/g, '')
+                    // Batasi maksimal 16 digit
+                    if (value.length <= 16) {
+                      handleChange({
+                        target: {
+                          name: 'nik',
+                          value: value
+                        }
+                      })
+                    }
                 }}
                 placeholder="Masukkan NIK 16 digit"
                 maxLength="16"
-                className={`w-full px-4 py-2.5 rounded-lg border ${errors.nik ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-emerald-700 focus:outline-none focus:border-transparent transition duration-200`}
+                className={`w-full px-4 py-2.5 rounded-lg border ${errors.nik ? 'border-red-500' : 'border-gray-300'} ${mode === 'edit' ? 'bg-gray-100' : ''} focus:ring-2 focus:ring-emerald-700 focus:outline-none focus:border-transparent transition duration-200`}
+                readOnly={mode === 'edit'}
                 required
               />
               {errors.nik && (
