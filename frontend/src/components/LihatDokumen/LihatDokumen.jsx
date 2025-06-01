@@ -29,7 +29,7 @@ const LihatDokumen = ({ data, onClose, isOpen }) => {
                 {/* Header */}
                 <div className="flex justify-between items-center p-5">
                     <h3 className="text-lg font-medium text-gray-900">
-                        Detail Dokumen - {data?.nama || 'Pendaftar'}
+                        Detail Dokumen - {data?.nama_siswa || 'Pendaftar'}
                     </h3>
                     <button
                         onClick={onClose}
