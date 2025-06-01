@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { FaCheckCircle } from 'react-icons/fa';
 
 /**
@@ -9,6 +9,8 @@ import { FaCheckCircle } from 'react-icons/fa';
  * @param {string} props.password - Password akun yang dibuat 
  */
 const Akun = ({ username, password }) => {
+  // Mengecek apakah URL saat ini mengandung '/admin'
+  const isAdmin = window.location.pathname.includes('/admin');
   return (
     <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-md p-8">
       {/* Icon centang hijau */}
@@ -49,7 +51,7 @@ const Akun = ({ username, password }) => {
       {/* Link kembali */}
       <div className="text-center mt-4">
         <button
-          onClick={() => window.location.href = '/pendaftaran'}
+          onClick={() => window.location.href = isAdmin ? '/admin/pendaftaran' : '/pendaftaran'}
           className="text-emerald-700 hover:text-emerald-600 transition-colors duration-300"
         >
           Kembali ke Form Pendaftaran

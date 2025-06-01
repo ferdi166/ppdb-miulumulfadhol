@@ -33,7 +33,7 @@ router.post('/', createPendaftaran);
 router.get('/total-pendaftar', getTotalPendaftaran);
 router.get('/total-pendaftar-diterima', getTotalPendaftaranDiterima);
 router.get('/check-kuota', checkKuotaPendaftaran);
-router.get('/diterima', VerifyTokens, AuthorizeAdminKepsek, getPendaftaranDiterima); 
+router.get('/diterima', getPendaftaranDiterima); 
 router.get('/belum-diterima', VerifyTokens, AuthorizeAdmin, getPendaftaranBelumDiterima);
 router.get('/user/:id_user', VerifyTokens, AuthorizePendaftar, getPendaftaranByUserId);
 router.get('/:id', getPendaftaranById);
