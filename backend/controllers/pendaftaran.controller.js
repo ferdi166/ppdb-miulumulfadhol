@@ -480,10 +480,6 @@ export const updatePendaftaran = async (req, res) => {
             id_jenjang_asal_sekolah: req.body.id_jenjang_asal_sekolah,
             nama_asal_sekolah: req.body.nama_asal_sekolah,
             tahun_lulus: req.body.tahun_lulus,
-            // id_user: req.body.id_user,
-            // is_diterima: req.body.is_diterima,
-            // waktu_diterima: req.body.is_diterima === 1 ? moment().tz('Asia/Jakarta').toDate() : null,
-            // daya_tampung: req.body.daya_tampung
         };
 
         // Update dokumen jika ada file baru
