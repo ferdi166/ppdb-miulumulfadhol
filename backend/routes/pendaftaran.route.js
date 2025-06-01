@@ -21,9 +21,12 @@ import {
     handleMulterError
 } from '../config/multer.config.js';
 
+import { VerifyTokens } from '../middleware/VerifyTokens.js';
+import { AuthorizeAdminKepsek } from '../middleware/AuthorizeAdminKepsek.js';
+
 const router = express.Router();
 
-router.get('/', getAllPendaftaran);
+router.get('/', VerifyTokens, AuthorizeAdminKepsek, getAllPendaftaran);
 router.post('/', createPendaftaran);
 router.get('/total-pendaftar', getTotalPendaftaran);
 router.get('/total-pendaftar-diterima', getTotalPendaftaranDiterima);
