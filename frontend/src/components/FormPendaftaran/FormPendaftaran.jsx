@@ -79,6 +79,22 @@ const FormPendaftaran = ({ mode = 'create' }) => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     
+    // Check all required fields at once
+    if (!formData.nik || 
+        !formData.namaSiswa || 
+        !formData.tempatLahir ||
+        !formData.tanggalLahir ||
+        !formData.jenisKelamin ||
+        !formData.namaOrangTua ||
+        !formData.telepon ||
+        !formData.alamat ||
+        !formData.id_jenjang_asal_sekolah ||
+        !formData.nama_asal_sekolah ||
+        !formData.tahunLulus) {
+      toast.warning('Form pendaftaran belum lengkap')
+      return
+    }
+
     // Cek jadwal dan kuota hanya untuk mode create
     if (mode === 'create') {
       if (!isJadwalAktif) {
@@ -186,7 +202,6 @@ const FormPendaftaran = ({ mode = 'create' }) => {
                 maxLength="16"
                 className={`w-full px-4 py-2.5 rounded-lg border ${errors.nik ? 'border-red-500' : 'border-gray-300'} ${mode === 'edit' ? 'bg-gray-100' : ''} focus:ring-2 focus:ring-emerald-700 focus:outline-none focus:border-transparent transition duration-200`}
                 readOnly={mode === 'edit'}
-                required
               />
               {errors.nik && (
                 <p className="mt-1 text-sm text-red-500">{errors.nik}</p>
@@ -208,7 +223,6 @@ const FormPendaftaran = ({ mode = 'create' }) => {
                 onChange={handleChange}
                 placeholder="Masukkan nama lengkap siswa"
                 className={`w-full px-4 py-2.5 rounded-lg border ${errors.namaSiswa ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-emerald-700 focus:outline-none focus:border-transparent transition duration-200`}
-                required
               />
               {errors.namaSiswa && (
                 <p className="mt-1 text-sm text-red-500">{errors.namaSiswa}</p>
@@ -231,7 +245,6 @@ const FormPendaftaran = ({ mode = 'create' }) => {
                   onChange={handleChange}
                   placeholder="Masukkan tempat lahir"
                   className={`w-full px-4 py-2.5 rounded-lg border ${errors.tempatLahir ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-emerald-700 focus:outline-none focus:border-transparent transition duration-200`}
-                  required
                 />
                 {errors.tempatLahir && (
                   <p className="mt-1 text-sm text-red-500">{errors.tempatLahir}</p>
@@ -251,7 +264,6 @@ const FormPendaftaran = ({ mode = 'create' }) => {
                   value={formData.tanggalLahir}
                   onChange={handleChange}
                   className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg border ${errors.tanggalLahir ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-emerald-700 focus:outline-none focus:border-transparent transition duration-200`}
-                  required
                 />
                 {errors.tanggalLahir && (
                   <p className="mt-1 text-sm text-red-500">{errors.tanggalLahir}</p>
@@ -277,7 +289,6 @@ const FormPendaftaran = ({ mode = 'create' }) => {
                     checked={formData.jenisKelamin === "L"}
                     onChange={handleChange}
                     className="w-4 h-4 text-emerald-700"
-                    required
                   />
                   <span className="ml-2 text-gray-700">Laki-laki</span>
                 </label>
@@ -309,7 +320,6 @@ const FormPendaftaran = ({ mode = 'create' }) => {
                 onChange={handleChange}
                 placeholder="Masukkan nama lengkap orang tua"
                 className={`w-full px-4 py-2.5 rounded-lg border ${errors.namaOrangTua ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-emerald-700 focus:outline-none focus:border-transparent transition duration-200`}
-                required
               />
               {errors.namaOrangTua && (
                 <p className="mt-1 text-sm text-red-500">{errors.namaOrangTua}</p>
@@ -344,7 +354,6 @@ const FormPendaftaran = ({ mode = 'create' }) => {
                 placeholder="Contoh: 081234567890"
                 maxLength="13"
                 className={`w-full px-4 py-2.5 rounded-lg border ${errors.telepon ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-emerald-700 focus:outline-none focus:border-transparent transition duration-200`}
-                required
               />
               {errors.telepon && (
                 <p className="mt-1 text-sm text-red-500">{errors.telepon}</p>
@@ -366,7 +375,6 @@ const FormPendaftaran = ({ mode = 'create' }) => {
                 rows="3"
                 placeholder="Masukkan alamat lengkap"
                 className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-700 focus:outline-none focus:border-transparent transition duration-200"
-                required
               ></textarea>
             </div>
           </div>
@@ -401,7 +409,6 @@ const FormPendaftaran = ({ mode = 'create' }) => {
                     value={formData.id_jenjang_asal_sekolah}
                     onChange={handleChange}
                     className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-700 focus:outline-none focus:border-transparent transition duration-200"
-                    required
                   >
                   <option value="">Pilih Jenjang</option>
                   {/* Opsi jenjang sekolah akan diisi dari API */}
@@ -422,7 +429,6 @@ const FormPendaftaran = ({ mode = 'create' }) => {
                   onChange={handleChange}
                   placeholder="Masukkan nama sekolah asal"
                   className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg border border-gray-300 ${mode === 'edit' ? 'bg-gray-100' : ''} focus:ring-2 focus:ring-emerald-700 focus:outline-none focus:border-transparent transition duration-200`}
-                  required
                   readOnly={mode === 'edit'}
                 />
               </div>
@@ -456,7 +462,6 @@ const FormPendaftaran = ({ mode = 'create' }) => {
                 placeholder="Contoh: 2025"
                 maxLength="4"
                 className={`w-full px-4 py-2.5 rounded-lg border ${errors.tahunLulus ? 'border-red-500' : 'border-gray-300'} ${mode === 'edit' ? 'bg-gray-100' : ''} focus:ring-2 focus:ring-emerald-700 focus:outline-none focus:border-transparent transition duration-200`}
-                required
                 readOnly={mode === 'edit'}
               />
               {errors.tahunLulus && (
