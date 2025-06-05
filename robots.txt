@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://ppdbmiulumulfadhol.my.id/sitemap.xml
