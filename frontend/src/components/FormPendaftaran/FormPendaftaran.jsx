@@ -19,7 +19,7 @@ const FormPendaftaran = ({ mode = 'create' }) => {
   const [pesanJadwal, setPesanJadwal] = useState('')
   const [kuotaTersedia, setKuotaTersedia] = useState(true)
   const [infoKuota, setInfoKuota] = useState(null)
-  
+
   // Menggunakan form context
   const { formData, errors, handleChange, handleSubmit: handleFormSubmit } = useFormStore()
 
@@ -78,19 +78,19 @@ const FormPendaftaran = ({ mode = 'create' }) => {
   // Handle submit form dengan menampilkan informasi akun
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
+
     // Check all required fields at once
-    if (!formData.nik || 
-        !formData.namaSiswa || 
-        !formData.tempatLahir ||
-        !formData.tanggalLahir ||
-        !formData.jenisKelamin ||
-        !formData.namaOrangTua ||
-        !formData.telepon ||
-        !formData.alamat ||
-        !formData.id_jenjang_asal_sekolah ||
-        !formData.nama_asal_sekolah ||
-        !formData.tahunLulus) {
+    if (!formData.nik ||
+      !formData.namaSiswa ||
+      !formData.tempatLahir ||
+      !formData.tanggalLahir ||
+      !formData.jenisKelamin ||
+      !formData.namaOrangTua ||
+      !formData.telepon ||
+      !formData.alamat ||
+      !formData.id_jenjang_asal_sekolah ||
+      !formData.nama_asal_sekolah ||
+      !formData.tahunLulus) {
       toast.warning('Form pendaftaran belum lengkap')
       return
     }
@@ -106,7 +106,7 @@ const FormPendaftaran = ({ mode = 'create' }) => {
         return
       }
     }
-    
+
     try {
       // Panggil handleSubmit dari context
       const result = await handleFormSubmit(e)
@@ -158,7 +158,7 @@ const FormPendaftaran = ({ mode = 'create' }) => {
   // Jika form berhasil disubmit, tampilkan komponen Akun
   if (isSuccess) {
     return (
-      <Akun 
+      <Akun
         username={credentials.username}
         password={credentials.password}
       />
@@ -174,7 +174,7 @@ const FormPendaftaran = ({ mode = 'create' }) => {
             <FaUser className="text-emerald-700 text-2xl" />
             Data Pribadi
           </h3>
-          
+
           <div className="space-y-6">
             {/* NIK - 1 kolom penuh */}
             <div>
@@ -182,21 +182,21 @@ const FormPendaftaran = ({ mode = 'create' }) => {
                 NIK <span className="text-red-500">*</span>
               </label>
               <input
-                type="text" 
+                type="text"
                 name="nik"
                 value={formData.nik}
                 onChange={(e) => {
                   // Hanya terima angka
-                    const value = e.target.value.replace(/\D/g, '')
-                    // Batasi maksimal 16 digit
-                    if (value.length <= 16) {
-                      handleChange({
-                        target: {
-                          name: 'nik',
-                          value: value
-                        }
-                      })
-                    }
+                  const value = e.target.value.replace(/\D/g, '')
+                  // Batasi maksimal 16 digit
+                  if (value.length <= 16) {
+                    handleChange({
+                      target: {
+                        name: 'nik',
+                        value: value
+                      }
+                    })
+                  }
                 }}
                 placeholder="Masukkan NIK 16 digit"
                 maxLength="16"
@@ -336,7 +336,7 @@ const FormPendaftaran = ({ mode = 'create' }) => {
               </label>
               <input
                 type="text"
-                name="telepon" 
+                name="telepon"
                 value={formData.telepon}
                 onChange={(e) => {
                   // Hanya terima angka
@@ -361,7 +361,7 @@ const FormPendaftaran = ({ mode = 'create' }) => {
               <p className="mt-1 text-sm text-gray-500">
                 Masukkan nomor telepon aktif yang bisa dihubungi
               </p>
-            </div>                  
+            </div>
 
             {/* Alamat - 1 kolom penuh */}
             <div>
@@ -386,7 +386,7 @@ const FormPendaftaran = ({ mode = 'create' }) => {
             <FaSchool className="text-emerald-700 text-2xl" />
             Data Sekolah Asal
           </h3>
-          
+
           <div className="space-y-6">
             {/* Grid 3 kolom untuk jenjang sekolah dan nama sekolah */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
@@ -410,10 +410,10 @@ const FormPendaftaran = ({ mode = 'create' }) => {
                     onChange={handleChange}
                     className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-700 focus:outline-none focus:border-transparent transition duration-200"
                   >
-                  <option value="">Pilih Jenjang</option>
-                  {/* Opsi jenjang sekolah akan diisi dari API */}
-                  <option value="01">TK</option>
-                  <option value="02">RA</option>                  
+                    <option value="">Pilih Jenjang</option>
+                    {/* Opsi jenjang sekolah akan diisi dari API */}
+                    <option value="01">TK</option>
+                    <option value="02">RA</option>
                   </select>
                 )}
               </div>
