@@ -36,7 +36,7 @@ const Pengumuman = () => {
 
   // Fungsi untuk membuka hasil seleksi di tab baru
   const handleLihatHasil = () => {
-    window.location.href = '/lihat-pengumuman'
+    window.open('/lihat-pengumuman', '_blank')
   }
 
   return (
@@ -71,13 +71,13 @@ const Pengumuman = () => {
               <h3 className="text-xl font-semibold text-emerald-700 mb-4">
                 Pengumuman Hasil Seleksi
               </h3>
-              
+
               {/* Informasi pengumuman */}
               <div className="space-y-4 mb-8 text-gray-600">
                 <p>
                   Kepada seluruh calon peserta didik baru yang telah mendaftar,
                   hasil seleksi penerimaan peserta didik baru dapat dilihat melalui tombol di bawah ini.
-                </p>            
+                </p>
               </div>
 
               {/* Tombol Lihat Hasil */}
