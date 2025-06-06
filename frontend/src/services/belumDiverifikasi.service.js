@@ -1,9 +1,9 @@
 import api from "./api.service";
 import moment from 'moment-timezone'
 
-export const getPendaftaranBelumDiterima = async () => {
+export const getPendaftaranBelumDiverifikasi = async () => {
     try {
-        const response = await api.get('/pendaftaran/belum-diterima');
+        const response = await api.get('/pendaftaran/belum-diverifikasi');
         // Transform data dari response API
         const transformedData = response.data.data.map(item => ({
             id: item.id_pendaftaran,

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Table from '../../../components/Table/Table';
 import usePendaftarColumns from '../../../components/TableColumns/PendaftarColumns';
 import { FaSave } from 'react-icons/fa';
-import { getPendaftaranBelumDiterima } from '../../../services/belumditerima.service';
+import { getPendaftaranBelumDiverifikasi } from '../../../services/belumDiverifikasi.service';
 import { konfirmasiPenerimaan } from '../../../services/konfirmasipenerimaan.service';
 import { getJadwalPendaftaranById } from '../../../services/penjadwalan.service';
 import moment from 'moment-timezone';
@@ -17,7 +17,7 @@ const Penerimaan = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [selectedRows, setSelectedRows] = useState([]);
     // State untuk data pendaftar
-    const [dataBelumDiterima, setDataBelumDiterima] = useState([]);
+    const [dataBelumDiverifikasi, setDataBelumDiverifikasi] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isJadwalAktif, setIsJadwalAktif] = useState(true);
@@ -51,7 +51,7 @@ const Penerimaan = () => {
             for (const id of selectedRows) {
                 await konfirmasiPenerimaan(id);
             }
-            
+
             toast.success('Berhasil mengkonfirmasi penerimaan');
             // Reset pilihan dan refresh data
             setSelectedRows([]);
@@ -63,12 +63,12 @@ const Penerimaan = () => {
         }
     };
 
-    // Fungsi untuk mengambil data pendaftar yang belum diterima
+    // Fungsi untuk mengambil data pendaftar yang belum diverifikasi
     const fetchData = async () => {
         try {
             setIsLoading(true);
-            const data = await getPendaftaranBelumDiterima();
-            setDataBelumDiterima(data);
+            const data = await getPendaftaranBelumDiverifikasi();
+            setDataBelumDiverifikasi(data);
         } catch (err) {
             setError('Terjadi kesalahan saat mengambil data pendaftar');
             console.error(err);
@@ -141,7 +141,7 @@ const Penerimaan = () => {
             <div className="flex justify-center">
                 <div className="w-full">
                     <Table
-                        data={dataBelumDiterima}
+                        data={dataBelumDiverifikasi}
                         columns={columns}
                         showCheckbox={true}
                         isSidebarOpen={!isCollapsed}

@@ -26,11 +26,11 @@ const parseTanggal = (tanggal) => {
 export const getAllPendaftaran = async (req, res) => {
     try {
         // Mengambil data dengan relasi
-        const response = await Pendaftaran.findAll({            
+        const response = await Pendaftaran.findAll({
             order: [['id_pendaftaran', 'ASC']],
             include: [User, JenjangAsalSekolah, DayaTampung]
         });
-        
+
         // Format tanggal untuk response
         const formattedResponse = response.map((data) => {
             return {
@@ -38,7 +38,7 @@ export const getAllPendaftaran = async (req, res) => {
                 waktu_daftar: formatTanggal(data.waktu_daftar)
             };
         });
-        
+
         res.status(200).json({
             status: true,
             message: 'Data pendaftaran berhasil diambil',
@@ -46,10 +46,10 @@ export const getAllPendaftaran = async (req, res) => {
         });
     } catch (error) {
         // Mengirim response error
-        res.status(500).json({ 
+        res.status(500).json({
             status: false,
             message: 'Terjadi kesalahan saat mengambil data pendaftaran',
-            error: error.message                
+            error: error.message
         });
     }
 }
@@ -64,24 +64,24 @@ export const getPendaftaranById = async (req, res) => {
             },
             include: [User, JenjangAsalSekolah, DayaTampung]
         });
-        
+
         if (!response) {
             return res.status(404).json({ message: 'Data pendaftaran tidak ditemukan' });
         }
-        
+
         // Format tanggal untuk response
         const formattedResponse = {
             ...response.dataValues,
             waktu_daftar: formatTanggal(response.waktu_daftar)
         };
-        
+
         res.status(200).json({
             status: true,
             message: 'Data pendaftaran berhasil diambil',
             data: formattedResponse
         });
     } catch (error) {
-        res.status(500).json({ 
+        res.status(500).json({
             status: false,
             message: 'Terjadi kesalahan saat mengambil data pendaftaran',
             error: error.message
@@ -110,7 +110,7 @@ export const getPendaftaranDiterima = async (req, res) => {
                 waktu_diterima: formatTanggal(data.waktu_diterima)
             };
         });
-        
+
         res.status(200).json({
             success: true,
             message: "Data pendaftaran yang diterima berhasil diambil",
@@ -125,7 +125,7 @@ export const getPendaftaranDiterima = async (req, res) => {
     }
 }
 
-export const getPendaftaranBelumDiterima = async (req, res) => {
+export const getPendaftaranBelumDiverifikasi = async (req, res) => {
     try {
         // Mengambil data pendaftaran dengan is_diterima = 0
         const response = await Pendaftaran.findAll({
@@ -146,16 +146,16 @@ export const getPendaftaranBelumDiterima = async (req, res) => {
                 waktu_daftar: formatTanggal(data.waktu_daftar)
             };
         });
-        
+
         res.status(200).json({
             success: true,
-            message: "Data pendaftaran yang belum diterima berhasil diambil",
+            message: "Data pendaftaran yang belum diverifikasi berhasil diambil",
             data: formattedResponse
         });
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: "Terjadi kesalahan saat mengambil data pendaftaran yang belum diterima",
+            message: "Terjadi kesalahan saat mengambil data pendaftaran yang belum diverifikasi",
             error: error.message
         });
     }
@@ -202,14 +202,14 @@ export const getTotalPendaftaran = async (req, res) => {
     try {
         // Hitung total semua pendaftar
         const totalPendaftar = await Pendaftaran.count();
-        
+
         // Hitung total pendaftar laki-laki
         const totalLakiLaki = await Pendaftaran.count({
             where: {
                 jenis_kelamin: 1
             }
         });
-        
+
         // Hitung total pendaftar perempuan
         const totalPerempuan = await Pendaftaran.count({
             where: {
@@ -291,10 +291,10 @@ export const checkKuotaPendaftaran = async (req, res) => {
         });
     } catch (error) {
         console.error('Error checking kuota:', error);
-        return res.status(500).json({ 
-            success: false, 
+        return res.status(500).json({
+            success: false,
             message: 'Terjadi kesalahan saat mengecek kuota',
-            error: error.message 
+            error: error.message
         });
     }
 };
@@ -349,7 +349,7 @@ export const createPendaftaran = async (req, res) => {
 
         // Cek kuota pendaftaran
         const kuotaInfo = await checkKuotaPendaftaranInternal();
-        
+
         if (!kuotaInfo.kuotaTersedia) {
             return res.status(400).json({
                 success: false,
@@ -381,7 +381,7 @@ export const createPendaftaran = async (req, res) => {
         const jam = currentDate.format('HH');
         const menit = currentDate.format('mm');
         const detik = currentDate.format('ss');
-        
+
         // Format: [ID_JENJANG]-[BULAN][TANGGAL][JAM][MENIT][DETIK]
         // Contoh: 01-2093028 (untuk TK yang mendaftar bulan 2, tanggal 9, jam 30:28)
         const noPendaftaran = `${req.body.id_jenjang_asal_sekolah}-${bulan}${tanggal}${jam}${menit}${detik}`;
@@ -421,14 +421,14 @@ export const createPendaftaran = async (req, res) => {
         await pendaftaran.update({
             id_user: newUser.id_user
         });
-        
+
         // Format tanggal untuk response
         const formattedResponse = {
             ...pendaftaran.dataValues,
             waktu_daftar: formatTanggal(pendaftaran.waktu_daftar),
             id_user: newUser.id_user
         };
-        
+
         res.status(201).json({
             success: true,
             message: 'Data pendaftaran berhasil dibuat',
@@ -443,10 +443,10 @@ export const createPendaftaran = async (req, res) => {
         });
     } catch (error) {
         console.error('Error creating pendaftaran:', error);
-        res.status(500).json({ 
+        res.status(500).json({
             success: false,
             message: 'Terjadi kesalahan saat membuat data pendaftaran',
-            error: error.message 
+            error: error.message
         });
     }
 }
@@ -512,11 +512,11 @@ export const updatePendaftaran = async (req, res) => {
                     // Pindahkan file ke folder yang sesuai
                     const oldPath = path.join('./uploads/pendaftar', req.files[field][0].filename);
                     const newPath = path.join(uploadDir, req.files[field][0].filename);
-                    
+
                     if (fs.existsSync(oldPath)) {
                         fs.renameSync(oldPath, newPath);
                     }
-                    
+
                     // Gunakan forward slash untuk path yang disimpan di database
                     updateData[field] = `${folder}/${req.files[field][0].filename}`;
 
@@ -543,9 +543,9 @@ export const updatePendaftaran = async (req, res) => {
             data: updateData
         });
     } catch (error) {
-        res.status(500).json({ 
+        res.status(500).json({
             message: 'Terjadi kesalahan saat mengupdate data pendaftaran',
-            error: error.message 
+            error: error.message
         });
     }
 }
@@ -574,7 +574,7 @@ export const uploadDokumen = async (req, res) => {
         // List dokumen yang valid
         const dokumenList = [
             'dok_bukti_pembayaran',
-            'dok_kk', 
+            'dok_kk',
             'dok_akta',
             'dok_ijazah',
             'dok_ktp_orang_tua',
@@ -693,9 +693,9 @@ export const deletePendaftaran = async (req, res) => {
             message: 'Data pendaftaran berhasil dihapus'
         });
     } catch (error) {
-        res.status(500).json({ 
+        res.status(500).json({
             message: 'Terjadi kesalahan saat menghapus data pendaftaran',
-            error: error.message 
+            error: error.message
         });
     }
 }
@@ -729,7 +729,7 @@ export const konfirmasiPenerimaan = async (req, res) => {
         // Update status dan waktu diterima
         // Gunakan moment-timezone untuk format waktu Indonesia
         const waktuDiterima = moment().tz('Asia/Jakarta').format('YYYY-MM-DD HH:mm:ss');
-        
+
         await pendaftaran.update({
             is_diterima: 1, // 1 untuk status diterima
             waktu_diterima: parseTanggal(waktuDiterima), // Konversi ke UTC untuk database

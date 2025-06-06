@@ -8,7 +8,7 @@ import {
     deletePendaftaran,
     konfirmasiPenerimaan,
     getPendaftaranDiterima,
-    getPendaftaranBelumDiterima,
+    getPendaftaranBelumDiverifikasi,
     getPendaftaranByUserId,
     uploadDokumen,
     getTotalPendaftaran,
@@ -33,8 +33,8 @@ router.post('/', createPendaftaran);
 router.get('/total-pendaftar', getTotalPendaftaran);
 router.get('/total-pendaftar-diterima', getTotalPendaftaranDiterima);
 router.get('/check-kuota', checkKuotaPendaftaran);
-router.get('/diterima', getPendaftaranDiterima); 
-router.get('/belum-diterima', VerifyTokens, AuthorizeAdmin, getPendaftaranBelumDiterima);
+router.get('/diterima', getPendaftaranDiterima);
+router.get('/belum-diverifikasi', VerifyTokens, AuthorizeAdmin, getPendaftaranBelumDiverifikasi);
 router.get('/user/:id_user', VerifyTokens, AuthorizePendaftar, getPendaftaranByUserId);
 router.get('/:id', getPendaftaranById);
 router.put('/:id', uploadDocument, handleMulterError, updatePendaftaran);
