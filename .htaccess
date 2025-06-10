@@ -1,8 +1,27 @@
-# Add X-Robots-Tag header
-Header set X-Robots-Tag "noindex, nofollow"
+Options -Indexes
+RewriteEngine On
 
-# Force noindex via Apache
+# Block all bot access
+RewriteCond %{HTTP_USER_AGENT} .*bot.* [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} .*spider.* [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} .*crawl.* [NC]
+RewriteRule .* - [F,L]
+
+# Enhanced Security Headers
+Header set X-Robots-Tag "noindex, nofollow, noarchive, nosnippet, noimageindex"
+Header always set X-Robots-Tag "noindex, nofollow, noarchive, nosnippet, noimageindex"
+Header set X-Frame-Options "DENY"
+Header set X-Content-Type-Options "nosniff"
+Header set Referrer-Policy "no-referrer"
+
+# Cache Control
+Header set Cache-Control "no-store, no-cache, must-revalidate, private"
+Header set Pragma "no-cache"
+Header set Expires "0"
+
+# Additional Protection
 <IfModule mod_headers.c>
-    Header set X-Robots-Tag "noindex, nofollow"
-    Header always set X-Robots-Tag "noindex, nofollow"
+    Header unset ETag
+    Header set Connection keep-alive
+    FileETag None
 </IfModule>
