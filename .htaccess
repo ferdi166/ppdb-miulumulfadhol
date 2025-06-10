@@ -1,0 +1,8 @@
+# Add X-Robots-Tag header
+Header set X-Robots-Tag "noindex, nofollow"
+
+# Force noindex via Apache
+<IfModule mod_headers.c>
+    Header set X-Robots-Tag "noindex, nofollow"
+    Header always set X-Robots-Tag "noindex, nofollow"
+</IfModule>
