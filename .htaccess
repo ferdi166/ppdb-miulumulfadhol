@@ -1,6 +1,12 @@
 Options -Indexes
 RewriteEngine On
 
+# Block specific bots more aggressively
+RewriteCond %{HTTP_USER_AGENT} Googlebot [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} bingbot [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} Yandex [NC]
+RewriteRule .* - [F,L]
+
 # Block all bot access
 RewriteCond %{HTTP_USER_AGENT} .*bot.* [NC,OR]
 RewriteCond %{HTTP_USER_AGENT} .*spider.* [NC,OR]
