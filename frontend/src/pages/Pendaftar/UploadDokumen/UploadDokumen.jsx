@@ -19,41 +19,41 @@ const UploadDokumen = () => {
     const [originalDocuments, setOriginalDocuments] = useState({});
     const [documentStatus, setDocumentStatus] = useState({});
     const [documentFiles, setDocumentFiles] = useState({});
-    const [newDocuments, setNewDocuments] = useState({});    
+    const [newDocuments, setNewDocuments] = useState({});
     const [loading, setLoading] = useState(false);
 
     const [documents, setDocuments] = useState([
-        { 
-            id: 'dok_akta', 
-            name: 'Akte Kelahiran', 
+        {
+            id: 'dok_akta',
+            name: 'Akte Kelahiran',
             description: 'Upload scan Akte Kelahiran asli',
             status: 'Belum Upload',
             file: null
         },
-        { 
-            id: 'dok_kk', 
-            name: 'Kartu Keluarga', 
+        {
+            id: 'dok_kk',
+            name: 'Kartu Keluarga',
             description: 'Upload scan Kartu Keluarga yang masih berlaku',
             status: 'Belum Upload',
             file: null
         },
-        { 
-            id: 'dok_ijazah', 
-            name: 'Ijazah', 
+        {
+            id: 'dok_ijazah',
+            name: 'Ijazah',
             description: 'Upload scan Ijazah atau Surat Keterangan Lulus',
             status: 'Belum Upload',
             file: null
         },
-        { 
-            id: 'dok_ktp_orang_tua', 
-            name: 'KTP Orang Tua', 
+        {
+            id: 'dok_ktp_orang_tua',
+            name: 'KTP Orang Tua',
             description: 'Upload scan KTP Orang Tua/Wali yang masih berlaku',
             status: 'Belum Upload',
             file: null
         },
-        { 
-            id: 'dok_bukti_pembayaran', 
-            name: 'Bukti Pembayaran', 
+        {
+            id: 'dok_bukti_pembayaran',
+            name: 'Bukti Pembayaran',
             description: 'Upload bukti pembayaran pendaftaran ke nomor rekening ini : 1234567890',
             status: 'Belum Upload',
             file: null
@@ -140,12 +140,7 @@ const UploadDokumen = () => {
         };
     }, [documentPreviews]);
 
-    // Tambahkan function untuk detect mobile
-    const isMobileDevice = () => {
-        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    };
-
-    // Handler untuk upload foto profil - dengan perbaikan untuk mobile
+    // Handler untuk upload foto profil
     const handleProfileUpload = (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -153,13 +148,29 @@ const UploadDokumen = () => {
         // Validasi ukuran file (max 2MB)
         if (file.size > 2 * 1024 * 1024) {
             toast.error('Ukuran file terlalu besar (maksimal 2MB)');
+            // Reset input file
+            e.target.value = '';
             return;
         }
 
         // Validasi tipe file
         if (!file.type.startsWith('image/')) {
             toast.error('File harus berupa gambar');
+            // Reset input file
+            e.target.value = '';
             return;
+        }
+
+        // Cek apakah file yang dipilih sama dengan foto yang sudah ada
+        if (profileImage && isNewPhoto) {
+            // Jika sudah ada foto baru yang belum disimpan, bandingkan
+            const currentFile = documentFiles['dok_foto'];
+            if (currentFile && currentFile.name === file.name && currentFile.size === file.size) {
+                toast.info('Foto yang dipilih sama dengan foto sebelumnya');
+                // Reset input file
+                e.target.value = '';
+                return;
+            }
         }
 
         // Hapus URL object yang lama jika ada dan bukan dari server
@@ -167,29 +178,11 @@ const UploadDokumen = () => {
             URL.revokeObjectURL(profileImage);
         }
 
-        // Untuk mobile, buat copy file dengan nama unik
-        if (isMobileDevice()) {
-            const fileReader = new FileReader();
-            fileReader.onload = function(e) {
-                const arrayBuffer = e.target.result;
-                const blob = new Blob([arrayBuffer], { type: file.type });
-                // Tambahkan timestamp untuk membuat nama file unik
-                const timestamp = Date.now();
-                const fileName = `${timestamp}_${file.name}`;
-                const newFile = new File([blob], fileName, { type: file.type });
-                
-                setDocumentFiles(prev => ({
-                    ...prev,
-                    'dok_foto': newFile
-                }));
-            };
-            fileReader.readAsArrayBuffer(file);
-        } else {
-            setDocumentFiles(prev => ({
-                ...prev,
-                'dok_foto': file
-            }));
-        }
+        // Simpan file untuk diupload
+        setDocumentFiles(prev => ({
+            ...prev,
+            'dok_foto': file
+        }));
 
         const reader = new FileReader();
         reader.onload = () => {
@@ -197,8 +190,8 @@ const UploadDokumen = () => {
             setIsNewPhoto(true);
         };
         reader.readAsDataURL(file);
-        
-        // Force reset input file dengan delay untuk mobile
+
+        // Reset input file untuk memastikan onChange bisa dipicu lagi
         setTimeout(() => {
             e.target.value = '';
         }, 100);
@@ -206,16 +199,28 @@ const UploadDokumen = () => {
 
     // Hapus foto profil
     const handleRemovePhoto = () => {
+        // Hapus file foto dari documentFiles jika ada
+        setDocumentFiles(prev => {
+            const newFiles = { ...prev };
+            delete newFiles['dok_foto'];
+            return newFiles;
+        });
+
         // Jika ada foto asli dari server, kembalikan ke foto asli
         if (originalPhoto) {
             setProfileImage(originalPhoto);
+            setIsNewPhoto(false);
         } else {
+            // Hapus URL object jika ada
+            if (profileImage && isNewPhoto) {
+                URL.revokeObjectURL(profileImage);
+            }
             setProfileImage(null);
+            setIsNewPhoto(false);
         }
-        setIsNewPhoto(false);
     };
 
-    // Handler untuk upload dokumen - dengan perbaikan untuk mobile
+    // Handler untuk upload dokumen
     const handleDocumentUpload = (e, docId) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -223,13 +228,28 @@ const UploadDokumen = () => {
         // Validasi ukuran file (max 2MB)
         if (file.size > 2 * 1024 * 1024) {
             toast.error('Ukuran file terlalu besar (maksimal 2MB)');
+            // Reset input file
+            e.target.value = '';
             return;
         }
 
         // Validasi tipe file
         if (!file.type.startsWith('image/')) {
             toast.error('Format dokumen belum sesuai (JPG/PNG/JPEG)');
+            // Reset input file
+            e.target.value = '';
             return;
+        }
+
+        // Cek apakah file yang dipilih sama dengan dokumen yang sudah ada
+        if (documentFiles[docId]) {
+            const currentFile = documentFiles[docId];
+            if (currentFile.name === file.name && currentFile.size === file.size) {
+                toast.info(`Dokumen ${doc.name} yang dipilih sama dengan sebelumnya`);
+                // Reset input file
+                e.target.value = '';
+                return;
+            }
         }
 
         // Hapus URL object yang lama jika ada dan bukan dari server
@@ -237,29 +257,11 @@ const UploadDokumen = () => {
             URL.revokeObjectURL(documentPreviews[docId]);
         }
 
-        // Untuk mobile, buat copy file dengan nama unik
-        if (isMobileDevice()) {
-            const fileReader = new FileReader();
-            fileReader.onload = function(e) {
-                const arrayBuffer = e.target.result;
-                const blob = new Blob([arrayBuffer], { type: file.type });
-                // Tambahkan timestamp untuk membuat nama file unik
-                const timestamp = Date.now();
-                const fileName = `${timestamp}_${file.name}`;
-                const newFile = new File([blob], fileName, { type: file.type });
-                
-                setDocumentFiles(prev => ({
-                    ...prev,
-                    [docId]: newFile
-                }));
-            };
-            fileReader.readAsArrayBuffer(file);
-        } else {
-            setDocumentFiles(prev => ({
-                ...prev,
-                [docId]: file
-            }));
-        }
+        // Simpan file untuk diupload nanti
+        setDocumentFiles(prev => ({
+            ...prev,
+            [docId]: file
+        }));
 
         // Update nama file
         setDocumentNames(prev => ({
@@ -286,7 +288,7 @@ const UploadDokumen = () => {
             [docId]: true
         }));
 
-        // Force reset input file dengan delay untuk mobile
+        // Reset input file untuk memastikan onChange bisa dipicu lagi
         setTimeout(() => {
             e.target.value = '';
         }, 100);
@@ -294,16 +296,6 @@ const UploadDokumen = () => {
         console.log(`File ${file.name} siap diupload untuk ${docId}`);
     };
 
-    // Tambahkan function untuk force reset semua input file
-    const forceResetInputs = () => {
-        // Reset semua input file
-        const fileInputs = document.querySelectorAll('input[type="file"]');
-        fileInputs.forEach(input => {
-            input.value = '';
-        });
-    };
-
-    // Update removeDocument function
     const removeDocument = (docId) => {
         // Hapus preview URL jika bukan dari server
         if (documentPreviews[docId] && !originalDocuments[docId]) {
@@ -335,11 +327,13 @@ const UploadDokumen = () => {
                 ...prev,
                 [docId]: originalDocuments[docId]
             }));
+            // Status tetap 'Lengkap' karena masih ada dokumen asli
             setDocumentStatus(prev => ({
                 ...prev,
                 [docId]: 'Lengkap'
             }));
         } else {
+            // Jika tidak ada dokumen asli, hapus preview dan status
             setDocumentPreviews(prev => {
                 const newPreviews = { ...prev };
                 delete newPreviews[docId];
@@ -352,13 +346,6 @@ const UploadDokumen = () => {
             });
         }
 
-        // Force reset input file untuk mobile
-        if (isMobileDevice()) {
-            setTimeout(() => {
-                const input = document.getElementById(docId);
-                if (input) input.value = '';
-            }, 100);
-        }
     };
 
     // Handler untuk submit form
@@ -372,124 +359,88 @@ const UploadDokumen = () => {
         // Validasi kelengkapan dokumen dan foto
         let missingItems = [];
 
-        // Cek foto profil
-        if (!profileImage && !originalPhoto) {
+        // Cek foto profil - harus ada foto asli atau foto baru yang akan diupload
+        if (!profileImage && !originalPhoto && !documentFiles['dok_foto']) {
             missingItems.push('Foto Profil');
         }
 
         // Cek dokumen-dokumen lainnya
         const missingDocuments = documents.filter(doc => {
+            // Cek apakah dokumen sudah ada sebelumnya (dari API) atau baru diupload
             const hasExistingDoc = doc.file;
             const hasNewDoc = documentFiles[doc.id];
             return !hasExistingDoc && !hasNewDoc;
         });
 
+        // Tambahkan dokumen yang belum lengkap ke array missingItems
         missingItems = [...missingItems, ...missingDocuments.map(doc => doc.name)];
+
+        // Cek apakah ada perubahan yang perlu disimpan
+        const hasChanges = Object.keys(documentFiles).length > 0 || (isNewPhoto && documentFiles['dok_foto']);
+        
+        if (!hasChanges) {
+            toast.info('Tidak ada perubahan untuk disimpan');
+            return;
+        }
 
         if (missingItems.length > 0) {
             toast.warning(`Silakan lengkapi item berikut: ${missingItems.join(', ')}`);
             return;
         }
 
-        setLoading(true);
-
         try {
             const currentUser = getCurrentUser();
             const pendaftaran = await getPendaftaranByUserId(currentUser.id_user);
-            
+
             if (!pendaftaran) {
                 toast.error('Data pendaftaran tidak ditemukan');
                 return;
             }
 
-            // Membuat FormData dengan pendekatan khusus untuk mobile
+            // Membuat FormData untuk upload
             const formData = new FormData();
-            
+
             // Menambahkan file ke FormData jika ada
             documents.forEach(doc => {
                 const file = documentFiles[doc.id];
                 if (file) {
-                    // Untuk mobile, pastikan file dalam format yang benar
-                    if (isMobileDevice()) {
-                        // Buat blob baru untuk memastikan compatibility
-                        const blob = new Blob([file], { type: file.type });
-                        formData.append(doc.id, blob, file.name);
-                    } else {
-                        formData.append(doc.id, file);
-                    }
+                    formData.append(doc.id, file);
                 }
             });
 
             // Menambahkan foto profil jika ada perubahan
-            if (isNewPhoto && documentFiles['dok_foto']) {
-                const fotoFile = documentFiles['dok_foto'];
-                if (isMobileDevice()) {
-                    const blob = new Blob([fotoFile], { type: fotoFile.type });
-                    formData.append('dok_foto', blob, fotoFile.name);
-                } else {
-                    formData.append('dok_foto', fotoFile);
-                }
+            if (profileImage && isNewPhoto && documentFiles['dok_foto']) {
+                formData.append('dok_foto', documentFiles['dok_foto']);
             }
 
-            // Untuk mobile, gunakan timeout yang lebih pendek dan retry mechanism
-            if (isMobileDevice()) {
-                let attempts = 0;
-                const maxAttempts = 3;
-                let lastError;
-
-                while (attempts < maxAttempts) {
-                    try {
-                        await uploadDokumen(pendaftaran.id, formData);
-                        break; // Sukses, keluar dari loop
-                    } catch (error) {
-                        lastError = error;
-                        attempts++;
-                        
-                        if (attempts < maxAttempts) {
-                            toast.info(`Mencoba lagi... (${attempts}/${maxAttempts})`);
-                            await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2s
-                        }
-                    }
-                }
-
-                if (attempts === maxAttempts) {
-                    throw lastError;
-                }
-            } else {
-                // Untuk desktop, gunakan cara normal
+            setLoading(true);
+            try {
+                // Upload dokumen
                 await uploadDokumen(pendaftaran.id, formData);
+                toast.success('Dokumen berhasil diupload');
+
+                // Reset semua state setelah berhasil upload
+                setDocumentFiles({});
+                setDocumentNames({});
+                setDocumentStatus({});
+                setNewDocuments({});
+                
+                if (isNewPhoto && documentFiles['dok_foto']) {
+                    setIsNewPhoto(false);
+                    setOriginalPhoto(profileImage);
+                }
+
+                // Refresh data dari server untuk mendapatkan data terbaru
+                await fetchData();
+            } catch (error) {
+                throw error;
+            } finally {
+                setLoading(false);
             }
-            
-            toast.success('Dokumen berhasil diupload');
-            
-            // Reset state
-            setDocumentFiles({});
-            setDocumentNames({});
-            setDocumentStatus({});
-            setNewDocuments({});
-            if (isNewPhoto) {
-                setIsNewPhoto(false);
-                setOriginalPhoto(profileImage);
-            }
-            
-            // Refresh data dari server
-            await fetchData();
 
         } catch (error) {
             console.error('Error submitting documents:', error);
-            let errorMessage = 'Terjadi kesalahan saat mengupload dokumen';
-            
-            if (error.response?.status === 413) {
-                errorMessage = 'Ukuran file terlalu besar';
-            } else if (error.response?.status === 422) {
-                errorMessage = 'Format file tidak valid';
-            } else if (error.message?.includes('Network Error')) {
-                errorMessage = 'Masalah koneksi internet. Silakan coba lagi dengan koneksi yang lebih stabil.';
-            }
-            
-            toast.error(errorMessage);
-        } finally {
-            setLoading(false);
+            toast.error(error.message || 'Terjadi kesalahan saat mengupload dokumen');
         }
     };
 
@@ -520,10 +471,10 @@ const UploadDokumen = () => {
                             <div className="relative">
                                 <div className="w-[114px] h-[151px] border-2 border-dashed rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center">
                                     {profileImage ? (
-                                        <img 
-                                            src={profileImage} 
-                                            alt="Profile" 
-                                            className="w-full h-full object-contain bg-blue-50" 
+                                        <img
+                                            src={profileImage}
+                                            alt="Profile"
+                                            className="w-full h-full object-contain bg-blue-50"
                                         />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center text-gray-400 text-lg font-medium">
@@ -541,8 +492,7 @@ const UploadDokumen = () => {
                                         className="hidden"
                                         accept="image/*"
                                         onChange={handleProfileUpload}
-                                        // Tambahkan key yang berubah untuk force reset di mobile
-                                        key={`profile_${profileImage || ''}_${Date.now()}`}
+                                        key={`photo-${profileImage ? 'has-image' : 'no-image'}-${isNewPhoto ? 'new' : 'old'}-${Date.now()}`} // Reset input dengan timestamp
                                     />
                                 </label>
                                 {profileImage && isNewPhoto && (
@@ -610,7 +560,7 @@ const UploadDokumen = () => {
                                             <span className="text-gray-400 text-xs sm:text-sm">PNG/JPG/JPEG (Maks. 2MB)</span>
                                         )}
                                         {documentNames[doc.id] && (
-                                            <button 
+                                            <button
                                                 type="button"
                                                 onClick={() => removeDocument(doc.id)}
                                                 className="ml-2 text-gray-400 hover:text-red-500 p-1 sm:p-0"
@@ -621,8 +571,8 @@ const UploadDokumen = () => {
                                     </div>
                                     <label
                                         htmlFor={doc.id}
-                                        className={`px-4 py-2 ${documentNames[doc.id] 
-                                            ? 'bg-green-50 text-green-600 hover:bg-green-100' 
+                                        className={`px-4 py-2 ${documentNames[doc.id]
+                                            ? 'bg-green-50 text-green-600 hover:bg-green-100'
                                             : 'bg-blue-50 text-blue-600 hover:bg-blue-100'} 
                                             rounded-lg sm:rounded-l-none sm:rounded-r-lg cursor-pointer text-sm flex items-center justify-center sm:justify-start gap-2 transition-colors`}
                                     >
@@ -644,16 +594,15 @@ const UploadDokumen = () => {
                                         className="hidden"
                                         accept=".jpg,.jpeg,.png"
                                         onChange={(e) => handleDocumentUpload(e, doc.id)}
-                                        // Tambahkan key yang berubah untuk force reset di mobile
-                                        key={`${doc.id}_${documentPreviews[doc.id] || ''}_${Date.now()}`}
+                                        key={`${doc.id}-${documentPreviews[doc.id] ? 'has-preview' : 'no-preview'}-${Date.now()}`} // Tambahkan timestamp untuk memastikan reset
                                     />
                                 </div>
                                 {/* Preview Dokumen */}
                                 {documentPreviews[doc.id] && (
                                     <div className="mt-3 relative group flex justify-center sm:justify-start">
                                         <div className="relative">
-                                            <img 
-                                                src={documentPreviews[doc.id]} 
+                                            <img
+                                                src={documentPreviews[doc.id]}
                                                 alt={`Preview ${doc.name}`}
                                                 className="max-w-[150px] sm:max-w-[200px] max-h-[150px] sm:max-h-[200px] rounded-lg shadow-sm border border-gray-200 object-contain bg-gray-50 hover:border-blue-300 transition-colors"
                                             />
@@ -686,26 +635,15 @@ const UploadDokumen = () => {
                             className="mt-1 mr-2 flex-shrink-0"
                         />
                         <label htmlFor="agreement" className="text-sm text-gray-600 flex-1">
-                        Menyatakan dengan sesungguhnya bahwa seluruh informasi/dokumen yang saya berikan pada saat pendaftaran PPDB Online ini adalah benar dan dapat dipertanggungjawabkan.
+                            Menyatakan dengan sesungguhnya bahwa seluruh informasi/dokumen yang saya berikan pada saat pendaftaran PPDB Online ini adalah benar dan dapat dipertanggungjawabkan.
                         </label>
                     </div>
                     <button
                         type="submit"
-                        disabled={!isAgreed || loading}
-                        className={`w-full py-3 px-4 rounded text-white font-medium transition-colors ${
-                            isAgreed && !loading 
-                                ? 'bg-blue-500 hover:bg-blue-600' 
-                                : 'bg-gray-400 cursor-not-allowed'
-                        }`}
+                        disabled={!isAgreed}
+                        className={`w-full py-2 px-4 rounded text-white font-medium ${isAgreed ? 'bg-blue-500' : 'bg-gray-400 cursor-not-allowed'}`}
                     >
-                        {loading ? (
-                            <div className="flex items-center justify-center">
-                                <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2"></div>
-                                {isMobileDevice() ? 'Mengupload (Mobile)...' : 'Mengupload...'}
-                            </div>
-                        ) : (
-                            'Simpan'
-                        )}
+                        Simpan
                     </button>
                 </div>
             </form>
