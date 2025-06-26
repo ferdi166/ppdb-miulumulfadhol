@@ -295,24 +295,6 @@ const UploadDokumen = () => {
 
     };
 
-    // Tambahkan function helper untuk retry
-    const uploadWithRetry = async (pendaftaranId, formData, maxRetries = 3) => {
-        for (let attempt = 1; attempt <= maxRetries; attempt++) {
-            try {
-                return await uploadDokumen(pendaftaranId, formData);
-            } catch (error) {
-                console.log(`Upload attempt ${attempt} failed:`, error);
-
-                if (attempt === maxRetries) {
-                    throw error;
-                }
-
-                // Wait before retry (exponential backoff)
-                await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
-            }
-        }
-    };
-
     // Handler untuk submit form
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -376,8 +358,8 @@ const UploadDokumen = () => {
 
             setLoading(true);
             try {
-                // Gunakan retry mechanism untuk upload
-                await uploadWithRetry(pendaftaran.id, formData);
+                // Upload dokumen
+                await uploadDokumen(pendaftaran.id, formData);
                 toast.success('Dokumen berhasil diupload');
 
                 // Simpan preview dokumen yang baru diupload
@@ -408,11 +390,7 @@ const UploadDokumen = () => {
 
         } catch (error) {
             console.error('Error submitting documents:', error);
-            if (error.code === 'ERR_NETWORK') {
-                toast.error('Koneksi tidak stabil. Silakan coba lagi atau gunakan koneksi yang lebih stabil.');
-            } else {
-                toast.error(error.message || 'Terjadi kesalahan saat mengupload dokumen');
-            }
+            toast.error(error.message || 'Terjadi kesalahan saat mengupload dokumen');
         }
     };
 
