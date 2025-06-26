@@ -162,6 +162,12 @@ const UploadDokumen = () => {
             URL.revokeObjectURL(profileImage);
         }
 
+        // Simpan file langsung tanpa FileReader untuk menghindari masalah di mobile
+        setDocumentFiles(prev => ({
+            ...prev,
+            'dok_foto': file
+        }));
+
         const reader = new FileReader();
         reader.onload = () => {
             setProfileImage(reader.result);
@@ -313,13 +319,11 @@ const UploadDokumen = () => {
 
         // Cek dokumen-dokumen lainnya
         const missingDocuments = documents.filter(doc => {
-            // Cek apakah dokumen sudah ada sebelumnya (dari API) atau baru diupload
             const hasExistingDoc = doc.file;
             const hasNewDoc = documentFiles[doc.id];
             return !hasExistingDoc && !hasNewDoc;
         });
 
-        // Tambahkan dokumen yang belum lengkap ke array missingItems
         missingItems = [...missingItems, ...missingDocuments.map(doc => doc.name)];
 
         if (missingItems.length > 0) {
@@ -347,34 +351,28 @@ const UploadDokumen = () => {
                 }
             });
 
-            // Menambahkan foto profil jika ada perubahan
-            if (profileImage && isNewPhoto) {
-                // Mengubah base64 string menjadi file
-                const response = await fetch(profileImage);
-                const blob = await response.blob();
-                const photoFile = new File([blob], 'photo.jpg', { type: 'image/jpeg' });
-                formData.append('dok_foto', photoFile);
+            // Menambahkan foto profil jika ada perubahan - perbaikan untuk mobile
+            if (isNewPhoto && documentFiles['dok_foto']) {
+                formData.append('dok_foto', documentFiles['dok_foto']);
             }
 
             setLoading(true);
             try {
-                // Upload dokumen
-                await uploadDokumen(pendaftaran.id, formData);
+                // Upload dokumen dengan timeout yang lebih lama untuk mobile
+                const uploadPromise = uploadDokumen(pendaftaran.id, formData);
+                const timeoutPromise = new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Upload timeout')), 60000) // 60 detik timeout
+                );
+                
+                await Promise.race([uploadPromise, timeoutPromise]);
+                
                 toast.success('Dokumen berhasil diupload');
                 
-                // Simpan preview dokumen yang baru diupload
-                const newPreviews = { ...documentPreviews };
-                documents.forEach(doc => {
-                    if (documentFiles[doc.id]) {
-                        newPreviews[doc.id] = URL.createObjectURL(documentFiles[doc.id]);
-                    }
-                });
-                
-                // Update state
-                setDocumentPreviews(newPreviews);
+                // Reset state
                 setDocumentFiles({});
                 setDocumentNames({});
                 setDocumentStatus({});
+                setNewDocuments({});
                 if (isNewPhoto) {
                     setIsNewPhoto(false);
                     setOriginalPhoto(profileImage);
@@ -383,14 +381,29 @@ const UploadDokumen = () => {
                 // Refresh data dari server
                 await fetchData();
             } catch (error) {
-                throw error;
+                console.error('Upload error:', error);
+                if (error.message === 'Upload timeout') {
+                    toast.error('Upload timeout. Silakan coba lagi dengan koneksi yang lebih stabil.');
+                } else {
+                    throw error;
+                }
             } finally {
                 setLoading(false);
             }
 
         } catch (error) {
             console.error('Error submitting documents:', error);
-            toast.error(error.message || 'Terjadi kesalahan saat mengupload dokumen');
+            let errorMessage = 'Terjadi kesalahan saat mengupload dokumen';
+            
+            if (error.response?.status === 413) {
+                errorMessage = 'Ukuran file terlalu besar';
+            } else if (error.response?.status === 422) {
+                errorMessage = 'Format file tidak valid';
+            } else if (error.message?.includes('Network Error')) {
+                errorMessage = 'Masalah koneksi internet. Silakan coba lagi.';
+            }
+            
+            toast.error(errorMessage);
         }
     };
 
