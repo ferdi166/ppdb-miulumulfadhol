@@ -145,7 +145,7 @@ const UploadDokumen = () => {
         return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     };
 
-    // Handler untuk upload foto profil
+    // Handler untuk upload foto profil - dengan perbaikan untuk mobile
     const handleProfileUpload = (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -167,14 +167,16 @@ const UploadDokumen = () => {
             URL.revokeObjectURL(profileImage);
         }
 
-        // Untuk mobile, buat copy file yang baru
+        // Untuk mobile, buat copy file dengan nama unik
         if (isMobileDevice()) {
-            // Buat file copy untuk mobile compatibility
             const fileReader = new FileReader();
             fileReader.onload = function(e) {
                 const arrayBuffer = e.target.result;
                 const blob = new Blob([arrayBuffer], { type: file.type });
-                const newFile = new File([blob], file.name, { type: file.type });
+                // Tambahkan timestamp untuk membuat nama file unik
+                const timestamp = Date.now();
+                const fileName = `${timestamp}_${file.name}`;
+                const newFile = new File([blob], fileName, { type: file.type });
                 
                 setDocumentFiles(prev => ({
                     ...prev,
@@ -196,8 +198,10 @@ const UploadDokumen = () => {
         };
         reader.readAsDataURL(file);
         
-        // Reset input file
-        e.target.value = '';
+        // Force reset input file dengan delay untuk mobile
+        setTimeout(() => {
+            e.target.value = '';
+        }, 100);
     };
 
     // Hapus foto profil
@@ -211,7 +215,7 @@ const UploadDokumen = () => {
         setIsNewPhoto(false);
     };
 
-    // Handler untuk upload dokumen
+    // Handler untuk upload dokumen - dengan perbaikan untuk mobile
     const handleDocumentUpload = (e, docId) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -233,13 +237,16 @@ const UploadDokumen = () => {
             URL.revokeObjectURL(documentPreviews[docId]);
         }
 
-        // Untuk mobile, buat copy file yang baru
+        // Untuk mobile, buat copy file dengan nama unik
         if (isMobileDevice()) {
             const fileReader = new FileReader();
             fileReader.onload = function(e) {
                 const arrayBuffer = e.target.result;
                 const blob = new Blob([arrayBuffer], { type: file.type });
-                const newFile = new File([blob], file.name, { type: file.type });
+                // Tambahkan timestamp untuk membuat nama file unik
+                const timestamp = Date.now();
+                const fileName = `${timestamp}_${file.name}`;
+                const newFile = new File([blob], fileName, { type: file.type });
                 
                 setDocumentFiles(prev => ({
                     ...prev,
@@ -279,12 +286,24 @@ const UploadDokumen = () => {
             [docId]: true
         }));
 
-        // Reset input file
-        e.target.value = '';
+        // Force reset input file dengan delay untuk mobile
+        setTimeout(() => {
+            e.target.value = '';
+        }, 100);
 
         console.log(`File ${file.name} siap diupload untuk ${docId}`);
     };
 
+    // Tambahkan function untuk force reset semua input file
+    const forceResetInputs = () => {
+        // Reset semua input file
+        const fileInputs = document.querySelectorAll('input[type="file"]');
+        fileInputs.forEach(input => {
+            input.value = '';
+        });
+    };
+
+    // Update removeDocument function
     const removeDocument = (docId) => {
         // Hapus preview URL jika bukan dari server
         if (documentPreviews[docId] && !originalDocuments[docId]) {
@@ -316,13 +335,11 @@ const UploadDokumen = () => {
                 ...prev,
                 [docId]: originalDocuments[docId]
             }));
-            // Status tetap 'Lengkap' karena masih ada dokumen asli
             setDocumentStatus(prev => ({
                 ...prev,
                 [docId]: 'Lengkap'
             }));
         } else {
-            // Jika tidak ada dokumen asli, hapus preview dan status
             setDocumentPreviews(prev => {
                 const newPreviews = { ...prev };
                 delete newPreviews[docId];
@@ -335,6 +352,13 @@ const UploadDokumen = () => {
             });
         }
 
+        // Force reset input file untuk mobile
+        if (isMobileDevice()) {
+            setTimeout(() => {
+                const input = document.getElementById(docId);
+                if (input) input.value = '';
+            }, 100);
+        }
     };
 
     // Handler untuk submit form
@@ -517,7 +541,8 @@ const UploadDokumen = () => {
                                         className="hidden"
                                         accept="image/*"
                                         onChange={handleProfileUpload}
-                                        key={profileImage} // Reset input saat foto berubah
+                                        // Tambahkan key yang berubah untuk force reset di mobile
+                                        key={`profile_${profileImage || ''}_${Date.now()}`}
                                     />
                                 </label>
                                 {profileImage && isNewPhoto && (
@@ -619,7 +644,8 @@ const UploadDokumen = () => {
                                         className="hidden"
                                         accept=".jpg,.jpeg,.png"
                                         onChange={(e) => handleDocumentUpload(e, doc.id)}
-                                        key={documentPreviews[doc.id]} // Reset input saat dokumen berubah
+                                        // Tambahkan key yang berubah untuk force reset di mobile
+                                        key={`${doc.id}_${documentPreviews[doc.id] || ''}_${Date.now()}`}
                                     />
                                 </div>
                                 {/* Preview Dokumen */}
