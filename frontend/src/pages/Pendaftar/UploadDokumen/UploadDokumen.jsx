@@ -140,6 +140,11 @@ const UploadDokumen = () => {
         };
     }, [documentPreviews]);
 
+    // Tambahkan function untuk detect mobile
+    const isMobileDevice = () => {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    };
+
     // Handler untuk upload foto profil
     const handleProfileUpload = (e) => {
         const file = e.target.files[0];
@@ -162,11 +167,27 @@ const UploadDokumen = () => {
             URL.revokeObjectURL(profileImage);
         }
 
-        // Simpan file langsung tanpa FileReader untuk menghindari masalah di mobile
-        setDocumentFiles(prev => ({
-            ...prev,
-            'dok_foto': file
-        }));
+        // Untuk mobile, buat copy file yang baru
+        if (isMobileDevice()) {
+            // Buat file copy untuk mobile compatibility
+            const fileReader = new FileReader();
+            fileReader.onload = function(e) {
+                const arrayBuffer = e.target.result;
+                const blob = new Blob([arrayBuffer], { type: file.type });
+                const newFile = new File([blob], file.name, { type: file.type });
+                
+                setDocumentFiles(prev => ({
+                    ...prev,
+                    'dok_foto': newFile
+                }));
+            };
+            fileReader.readAsArrayBuffer(file);
+        } else {
+            setDocumentFiles(prev => ({
+                ...prev,
+                'dok_foto': file
+            }));
+        }
 
         const reader = new FileReader();
         reader.onload = () => {
@@ -212,11 +233,26 @@ const UploadDokumen = () => {
             URL.revokeObjectURL(documentPreviews[docId]);
         }
 
-        // Simpan file untuk diupload nanti
-        setDocumentFiles(prev => ({
-            ...prev,
-            [docId]: file
-        }));
+        // Untuk mobile, buat copy file yang baru
+        if (isMobileDevice()) {
+            const fileReader = new FileReader();
+            fileReader.onload = function(e) {
+                const arrayBuffer = e.target.result;
+                const blob = new Blob([arrayBuffer], { type: file.type });
+                const newFile = new File([blob], file.name, { type: file.type });
+                
+                setDocumentFiles(prev => ({
+                    ...prev,
+                    [docId]: newFile
+                }));
+            };
+            fileReader.readAsArrayBuffer(file);
+        } else {
+            setDocumentFiles(prev => ({
+                ...prev,
+                [docId]: file
+            }));
+        }
 
         // Update nama file
         setDocumentNames(prev => ({
@@ -331,6 +367,8 @@ const UploadDokumen = () => {
             return;
         }
 
+        setLoading(true);
+
         try {
             const currentUser = getCurrentUser();
             const pendaftaran = await getPendaftaranByUserId(currentUser.id_user);
@@ -340,56 +378,78 @@ const UploadDokumen = () => {
                 return;
             }
 
-            // Membuat FormData untuk upload
+            // Membuat FormData dengan pendekatan khusus untuk mobile
             const formData = new FormData();
             
             // Menambahkan file ke FormData jika ada
             documents.forEach(doc => {
                 const file = documentFiles[doc.id];
                 if (file) {
-                    formData.append(doc.id, file);
+                    // Untuk mobile, pastikan file dalam format yang benar
+                    if (isMobileDevice()) {
+                        // Buat blob baru untuk memastikan compatibility
+                        const blob = new Blob([file], { type: file.type });
+                        formData.append(doc.id, blob, file.name);
+                    } else {
+                        formData.append(doc.id, file);
+                    }
                 }
             });
 
-            // Menambahkan foto profil jika ada perubahan - perbaikan untuk mobile
+            // Menambahkan foto profil jika ada perubahan
             if (isNewPhoto && documentFiles['dok_foto']) {
-                formData.append('dok_foto', documentFiles['dok_foto']);
+                const fotoFile = documentFiles['dok_foto'];
+                if (isMobileDevice()) {
+                    const blob = new Blob([fotoFile], { type: fotoFile.type });
+                    formData.append('dok_foto', blob, fotoFile.name);
+                } else {
+                    formData.append('dok_foto', fotoFile);
+                }
             }
 
-            setLoading(true);
-            try {
-                // Upload dokumen dengan timeout yang lebih lama untuk mobile
-                const uploadPromise = uploadDokumen(pendaftaran.id, formData);
-                const timeoutPromise = new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error('Upload timeout')), 60000) // 60 detik timeout
-                );
-                
-                await Promise.race([uploadPromise, timeoutPromise]);
-                
-                toast.success('Dokumen berhasil diupload');
-                
-                // Reset state
-                setDocumentFiles({});
-                setDocumentNames({});
-                setDocumentStatus({});
-                setNewDocuments({});
-                if (isNewPhoto) {
-                    setIsNewPhoto(false);
-                    setOriginalPhoto(profileImage);
+            // Untuk mobile, gunakan timeout yang lebih pendek dan retry mechanism
+            if (isMobileDevice()) {
+                let attempts = 0;
+                const maxAttempts = 3;
+                let lastError;
+
+                while (attempts < maxAttempts) {
+                    try {
+                        await uploadDokumen(pendaftaran.id, formData);
+                        break; // Sukses, keluar dari loop
+                    } catch (error) {
+                        lastError = error;
+                        attempts++;
+                        
+                        if (attempts < maxAttempts) {
+                            toast.info(`Mencoba lagi... (${attempts}/${maxAttempts})`);
+                            await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2s
+                        }
+                    }
                 }
-                
-                // Refresh data dari server
-                await fetchData();
-            } catch (error) {
-                console.error('Upload error:', error);
-                if (error.message === 'Upload timeout') {
-                    toast.error('Upload timeout. Silakan coba lagi dengan koneksi yang lebih stabil.');
-                } else {
-                    throw error;
+
+                if (attempts === maxAttempts) {
+                    throw lastError;
                 }
-            } finally {
-                setLoading(false);
+            } else {
+                // Untuk desktop, gunakan cara normal
+                await uploadDokumen(pendaftaran.id, formData);
             }
+            
+            toast.success('Dokumen berhasil diupload');
+            
+            // Reset state
+            setDocumentFiles({});
+            setDocumentNames({});
+            setDocumentStatus({});
+            setNewDocuments({});
+            if (isNewPhoto) {
+                setIsNewPhoto(false);
+                setOriginalPhoto(profileImage);
+            }
+            
+            // Refresh data dari server
+            await fetchData();
 
         } catch (error) {
             console.error('Error submitting documents:', error);
@@ -400,10 +460,12 @@ const UploadDokumen = () => {
             } else if (error.response?.status === 422) {
                 errorMessage = 'Format file tidak valid';
             } else if (error.message?.includes('Network Error')) {
-                errorMessage = 'Masalah koneksi internet. Silakan coba lagi.';
+                errorMessage = 'Masalah koneksi internet. Silakan coba lagi dengan koneksi yang lebih stabil.';
             }
             
             toast.error(errorMessage);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -603,10 +665,21 @@ const UploadDokumen = () => {
                     </div>
                     <button
                         type="submit"
-                        disabled={!isAgreed}
-                        className={`w-full py-2 px-4 rounded text-white font-medium ${isAgreed ? 'bg-blue-500' : 'bg-gray-400 cursor-not-allowed'}`}
+                        disabled={!isAgreed || loading}
+                        className={`w-full py-3 px-4 rounded text-white font-medium transition-colors ${
+                            isAgreed && !loading 
+                                ? 'bg-blue-500 hover:bg-blue-600' 
+                                : 'bg-gray-400 cursor-not-allowed'
+                        }`}
                     >
-                        Simpan
+                        {loading ? (
+                            <div className="flex items-center justify-center">
+                                <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2"></div>
+                                {isMobileDevice() ? 'Mengupload (Mobile)...' : 'Mengupload...'}
+                            </div>
+                        ) : (
+                            'Simpan'
+                        )}
                     </button>
                 </div>
             </form>
