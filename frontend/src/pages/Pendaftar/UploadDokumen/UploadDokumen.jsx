@@ -148,41 +148,19 @@ const UploadDokumen = () => {
         // Validasi ukuran file (max 2MB)
         if (file.size > 2 * 1024 * 1024) {
             toast.error('Ukuran file terlalu besar (maksimal 2MB)');
-            // Reset input file
-            e.target.value = '';
             return;
         }
 
         // Validasi tipe file
         if (!file.type.startsWith('image/')) {
             toast.error('File harus berupa gambar');
-            // Reset input file
-            e.target.value = '';
             return;
-        }
-
-        // Cek apakah file yang dipilih sama dengan foto yang sudah ada
-        if (profileImage && isNewPhoto) {
-            // Jika sudah ada foto baru yang belum disimpan, bandingkan
-            const currentFile = documentFiles['dok_foto'];
-            if (currentFile && currentFile.name === file.name && currentFile.size === file.size) {
-                toast.info('Foto yang dipilih sama dengan foto sebelumnya');
-                // Reset input file
-                e.target.value = '';
-                return;
-            }
         }
 
         // Hapus URL object yang lama jika ada dan bukan dari server
         if (profileImage && !originalPhoto) {
             URL.revokeObjectURL(profileImage);
         }
-
-        // Simpan file untuk diupload
-        setDocumentFiles(prev => ({
-            ...prev,
-            'dok_foto': file
-        }));
 
         const reader = new FileReader();
         reader.onload = () => {
@@ -191,33 +169,19 @@ const UploadDokumen = () => {
         };
         reader.readAsDataURL(file);
 
-        // Reset input file untuk memastikan onChange bisa dipicu lagi
-        setTimeout(() => {
-            e.target.value = '';
-        }, 100);
+        // Reset input file
+        e.target.value = '';
     };
 
     // Hapus foto profil
     const handleRemovePhoto = () => {
-        // Hapus file foto dari documentFiles jika ada
-        setDocumentFiles(prev => {
-            const newFiles = { ...prev };
-            delete newFiles['dok_foto'];
-            return newFiles;
-        });
-
         // Jika ada foto asli dari server, kembalikan ke foto asli
         if (originalPhoto) {
             setProfileImage(originalPhoto);
-            setIsNewPhoto(false);
         } else {
-            // Hapus URL object jika ada
-            if (profileImage && isNewPhoto) {
-                URL.revokeObjectURL(profileImage);
-            }
             setProfileImage(null);
-            setIsNewPhoto(false);
         }
+        setIsNewPhoto(false);
     };
 
     // Handler untuk upload dokumen
@@ -228,28 +192,13 @@ const UploadDokumen = () => {
         // Validasi ukuran file (max 2MB)
         if (file.size > 2 * 1024 * 1024) {
             toast.error('Ukuran file terlalu besar (maksimal 2MB)');
-            // Reset input file
-            e.target.value = '';
             return;
         }
 
         // Validasi tipe file
         if (!file.type.startsWith('image/')) {
             toast.error('Format dokumen belum sesuai (JPG/PNG/JPEG)');
-            // Reset input file
-            e.target.value = '';
             return;
-        }
-
-        // Cek apakah file yang dipilih sama dengan dokumen yang sudah ada
-        if (documentFiles[docId]) {
-            const currentFile = documentFiles[docId];
-            if (currentFile.name === file.name && currentFile.size === file.size) {
-                toast.info(`Dokumen ${doc.name} yang dipilih sama dengan sebelumnya`);
-                // Reset input file
-                e.target.value = '';
-                return;
-            }
         }
 
         // Hapus URL object yang lama jika ada dan bukan dari server
@@ -288,10 +237,8 @@ const UploadDokumen = () => {
             [docId]: true
         }));
 
-        // Reset input file untuk memastikan onChange bisa dipicu lagi
-        setTimeout(() => {
-            e.target.value = '';
-        }, 100);
+        // Reset input file
+        e.target.value = '';
 
         console.log(`File ${file.name} siap diupload untuk ${docId}`);
     };
@@ -359,8 +306,8 @@ const UploadDokumen = () => {
         // Validasi kelengkapan dokumen dan foto
         let missingItems = [];
 
-        // Cek foto profil - harus ada foto asli atau foto baru yang akan diupload
-        if (!profileImage && !originalPhoto && !documentFiles['dok_foto']) {
+        // Cek foto profil
+        if (!profileImage && !originalPhoto) {
             missingItems.push('Foto Profil');
         }
 
@@ -374,14 +321,6 @@ const UploadDokumen = () => {
 
         // Tambahkan dokumen yang belum lengkap ke array missingItems
         missingItems = [...missingItems, ...missingDocuments.map(doc => doc.name)];
-
-        // Cek apakah ada perubahan yang perlu disimpan
-        const hasChanges = Object.keys(documentFiles).length > 0 || (isNewPhoto && documentFiles['dok_foto']);
-        
-        if (!hasChanges) {
-            toast.info('Tidak ada perubahan untuk disimpan');
-            return;
-        }
 
         if (missingItems.length > 0) {
             toast.warning(`Silakan lengkapi item berikut: ${missingItems.join(', ')}`);
@@ -409,8 +348,12 @@ const UploadDokumen = () => {
             });
 
             // Menambahkan foto profil jika ada perubahan
-            if (profileImage && isNewPhoto && documentFiles['dok_foto']) {
-                formData.append('dok_foto', documentFiles['dok_foto']);
+            if (profileImage && isNewPhoto) {
+                // Mengubah base64 string menjadi file
+                const response = await fetch(profileImage);
+                const blob = await response.blob();
+                const photoFile = new File([blob], 'photo.jpg', { type: 'image/jpeg' });
+                formData.append('dok_foto', photoFile);
             }
 
             setLoading(true);
@@ -419,18 +362,25 @@ const UploadDokumen = () => {
                 await uploadDokumen(pendaftaran.id, formData);
                 toast.success('Dokumen berhasil diupload');
 
-                // Reset semua state setelah berhasil upload
+                // Simpan preview dokumen yang baru diupload
+                const newPreviews = { ...documentPreviews };
+                documents.forEach(doc => {
+                    if (documentFiles[doc.id]) {
+                        newPreviews[doc.id] = URL.createObjectURL(documentFiles[doc.id]);
+                    }
+                });
+
+                // Update state
+                setDocumentPreviews(newPreviews);
                 setDocumentFiles({});
                 setDocumentNames({});
                 setDocumentStatus({});
-                setNewDocuments({});
-                
-                if (isNewPhoto && documentFiles['dok_foto']) {
+                if (isNewPhoto) {
                     setIsNewPhoto(false);
                     setOriginalPhoto(profileImage);
                 }
 
-                // Refresh data dari server untuk mendapatkan data terbaru
+                // Refresh data dari server
                 await fetchData();
             } catch (error) {
                 throw error;
@@ -492,7 +442,7 @@ const UploadDokumen = () => {
                                         className="hidden"
                                         accept="image/*"
                                         onChange={handleProfileUpload}
-                                        key={`photo-${profileImage ? 'has-image' : 'no-image'}-${isNewPhoto ? 'new' : 'old'}-${Date.now()}`} // Reset input dengan timestamp
+                                        key={profileImage} // Reset input saat foto berubah
                                     />
                                 </label>
                                 {profileImage && isNewPhoto && (
@@ -594,7 +544,7 @@ const UploadDokumen = () => {
                                         className="hidden"
                                         accept=".jpg,.jpeg,.png"
                                         onChange={(e) => handleDocumentUpload(e, doc.id)}
-                                        key={`${doc.id}-${documentPreviews[doc.id] ? 'has-preview' : 'no-preview'}-${Date.now()}`} // Tambahkan timestamp untuk memastikan reset
+                                        key={documentPreviews[doc.id]} // Reset input saat dokumen berubah
                                     />
                                 </div>
                                 {/* Preview Dokumen */}
